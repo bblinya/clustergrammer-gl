@@ -1,8 +1,10 @@
 /* global __dirname:false */
 
 var DEBUG = process.argv.indexOf('-p') === -1;
-var webpack = require('webpack')
+var path = require("path");
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
+const build_dir = path.join(__dirname, "build/")
 
 module.exports = [
   {
@@ -11,7 +13,7 @@ module.exports = [
     devtool: DEBUG ? 'cheap-module-source-map' : false,
     target: 'web',
     output: {
-      path: __dirname,
+      path: build_dir,
       filename: 'clustergrammer-gl.js',
       libraryTarget: 'var',
       library: 'CGM'
@@ -64,7 +66,7 @@ module.exports = [
       devtool: DEBUG ? 'cheap-module-source-map' : false,
       target: 'web',
       output: {
-        path: __dirname,
+        path: build_dir,
         filename: 'clustergrammer-gl.node.js',
         libraryTarget: 'commonjs2',
         library: 'CGM'
@@ -105,7 +107,7 @@ module.exports = [
       devtool: DEBUG ? 'cheap-module-source-map' : false,
       target: 'web',
       output: {
-        path: __dirname,
+        path: build_dir,
         filename: 'clustergrammer-gl.min.js',
         libraryTarget: 'var',
         library: 'CGM'
@@ -149,7 +151,7 @@ module.exports = [
       devtool: DEBUG ? 'cheap-module-source-map' : false,
       target: 'web',
       output: {
-        path: __dirname,
+        path: build_dir,
         filename: 'clustergrammer-gl.node.min.js',
         libraryTarget: 'commonjs2',
         library: 'CGM'

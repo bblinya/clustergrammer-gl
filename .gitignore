@@ -57,6 +57,7 @@ sftp-config.json
 
 # webpack
 *.js.map
+build/
 # .eslint*
 
 # python

@@ -20,7 +20,7 @@ module.exports = function run_viz(external_model){
 
   regl.frame(function ({time}) {
 
-    // console.log('tick')
+    // console.log('tick', time)
 
     params.ani.time = time;
 

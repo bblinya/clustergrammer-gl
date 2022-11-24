@@ -62,7 +62,7 @@ function clustergrammer_gl(args, external_model=null){
 
     // this prevents Jupyter from listening to typing on the modal and
     // misinterpreting as keyboard shortcuts
-    if (cgm.params.is_widget){
+    if (cgm.params.is_widget){ // false, skip
 
       // tooltip input box
       let tooltip_id = cgm.params.tooltip_id.replace('#', '')
