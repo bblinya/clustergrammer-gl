@@ -94,6 +94,8 @@ module.exports = function make_matrix_args(){
       if (opacity_vary > 0.0){
         // gl_FragColor = vec4(1, 0, 0, abs(opacity_vary));
         gl_FragColor = vec4(pos_rgb, abs(opacity_vary));
+      } else if (-0.05 < opacity_vary && opacity_vary < 0.05) {
+        gl_FragColor = vec4(0.66, 0.66, 0.66, 1);
       } else {
         // gl_FragColor = vec4(0, 0, 1, abs(opacity_vary));
         gl_FragColor = vec4(neg_rgb, abs(opacity_vary));

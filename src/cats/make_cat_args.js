@@ -37,6 +37,8 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
     cat_width = (params.viz_dim.heat_size.y/0.5)/num_labels;
   }
 
+  console.log("axis category:", inst_axis, cat_height, cat_width)
+
   var zoom_function = function(context){
     return context.view;
   };
@@ -83,13 +85,13 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
                             .cat_scale(Math.abs(ini_cat_value));
       // get positive and negative colors
       if (ini_cat_value > 0){
-        ini_value_color = params.viz.cat_value_colors[0];
+        inst_value_color = params.viz.cat_value_colors[0];
       } else {
-        ini_value_color = params.viz.cat_value_colors[1];
+        inst_value_color = params.viz.cat_value_colors[1];
       }
       // inst_value_color = params.viz.cat_value_colors[0];
-      inst_value_color = color_to_rgba(ini_value_color)
-                           .map((x) => x * inst_opacity + (1 - inst_opacity));
+      inst_value_color = color_to_rgba(inst_value_color)
+                           .map((x) => ex * inst_opacity + (1 - inst_opacity));
     }
 
     // Set Category Colors
