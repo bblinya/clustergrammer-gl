@@ -9,7 +9,8 @@ module.exports = function build_dendrogram_sliders(){
 
   // Add sliders on top of the canvas
   /////////////////////////////////////
-  var slider_length = 130;
+  const slider_length = 130;
+  const slider_width = 25;
 
   // slider containers
 
@@ -23,16 +24,18 @@ module.exports = function build_dendrogram_sliders(){
 
     if (inst_axis === 'row'){
       inst_top = 175;
-      inst_left = params.viz_width - 25 ;
+      inst_left = params.viz_width - slider_width;
     } else {
-      inst_top = 795;
+      inst_top = params.viz_height - (slider_length / 2) - slider_width;
+      // inst_top = 795;
       inst_left = 55;
     }
+    console.log(inst_top, inst_left)
 
     axis_slider_container = d3.select(params.root + ' .canvas-container')
       .append('svg')
       .style('height', slider_length + 'px')
-      .style('width', '20px')
+      .style('width', (slider_width-5) + 'px')
       .style('position', 'absolute')
       .style('top', inst_top + 'px')
       .style('left', inst_left + 'px')
@@ -49,7 +52,7 @@ module.exports = function build_dendrogram_sliders(){
     axis_slider_container
       .append('rect')
       .style('height', slider_length + 'px')
-      .style('width', '25px')
+      .style('width', slider_width + 'px')
       .style('fill', 'white');
 
     build_single_dendro_slider(cgm, inst_axis);

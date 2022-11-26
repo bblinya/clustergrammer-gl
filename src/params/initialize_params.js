@@ -135,8 +135,8 @@ module.exports = function initialize_params(external_model){
 
   params.hzome = hzome_functions(params);
 
-  params.viz_height = 1035; //inst_height;
-  params.viz_width = 900; // inst_width;
+  params.viz_height = args.viz_height; //inst_height;
+  params.viz_width = args.viz_width; // inst_width;
 
   params.root = '#' + args.container.id;
   params.canvas_root = params.root + ' .canvas-container';

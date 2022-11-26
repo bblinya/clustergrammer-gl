@@ -22,8 +22,6 @@
   <script src='lib/js/underscore-min.js'></script>
   <script src="./build/clustergrammer-gl.js"></script>
 
-
-
   <script>
 
     var inst_div = document.createElement('div')
@@ -33,15 +31,15 @@
     var inst_container = document.getElementById('something');
 
     // the control panel is 135 pixels high
-    var inst_height = 1035;
+    var inst_height = 900;
     var inst_width = 900;
 
     var x_offset = 10;
     var y_offset = 10;
 
     d3.select('#something')
-      .style('height',inst_height + 'px')
-      .style('width',inst_width+'px')
+      // .style('height',inst_height + 'px')
+      // .style('width',inst_width+'px')
       .style('background','white')
       // .style('border', '2px solid #eee')
       .style('margin-left', x_offset + 'px')
@@ -160,7 +158,7 @@
       args.network = network;
       args.container=inst_container;
       args.viz_width=inst_width;
-      args.viz_height=inst_width;
+      args.viz_height=inst_height;
       // args.widget_model = 'my-widget-model';
       args.widget_callback = my_widget_callback
       args.use_hzome = true
