@@ -25,20 +25,22 @@ module.exports = function build_control_panel(){
   params.tooltip_fun = tooltip;
 
   var control_container = params.root + " .control-container"
-  // var control_container = d3.select(params.root + ' .control-container');
-  // console.log(control_container);
-  // var control_container = d3.select(params.root + ' .control-container')
-  //                           ._groups[0][0];
-  var i_height = 135;
-  var i_width = params.viz_width;
 
-  var control_panel_color = 'white';
+  const container = d3.select(control_container)
+    .attr("height", i_height + "px")
+    .attr("width", i_width + "px");
+  
+
+  // .attr("height", i_height + "px")
+  // .attr("width", i_width + "px");
+
+  const control_panel_color = 'white';
   var text_color = '#47515b';
   var button_color = '#eee';
 
-  var control_svg = d3.select(control_container)
-    .attr('height',i_height + 'px')
-    .attr('width',i_width+'px')
+  var i_height = 135;
+  var i_width = params.viz_width;
+  var control_svg = container
     .append('svg')
     .classed('control_svg', true)
     .attr('height',i_height + 'px')
@@ -118,7 +120,7 @@ module.exports = function build_control_panel(){
     .attr('height', 50)
     // .attr('xlink:href', 'https://amp.pharm.mssm.edu/clustergrammer/static/icons/graham_cracker_70.png')
     .attr('xlink:href', 'https://raw.githubusercontent.com/ismms-himc/clustergrammer-gl/master/img/graham_cracker_144.png')
-    .on('click', function(d) {
+    .on('click', function() {
         window.open(
           'https://clustergrammer.readthedocs.io/',
           '_blank' // <- This is what makes it open in a new window.
@@ -250,7 +252,7 @@ module.exports = function build_control_panel(){
       .enter()
       .append('g')
       .classed('reorder_buttons', true)
-      .attr('transform', function(d, i){
+      .attr('transform', function(_d, i){
         var x_offset = button_dim.x_trans * i + button_groups[i_axis].x_trans;
         return 'translate('+ x_offset  +', '+ button_groups[i_axis].y_trans +')';
       })
@@ -375,7 +377,7 @@ module.exports = function build_control_panel(){
     .style('font-size', '14px')
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
     .style('font-weight', 400)
-    .on('click', d => {
+    .on('click', () => {
 
       let inst_value = d3.select(params.root + ' .control-container .row_search_box')
         .node().value
@@ -425,7 +427,7 @@ module.exports = function build_control_panel(){
 
   control_svg
     .append('g')
-    .on('click', x => {
+    .on('click', () => {
       params.download.delimiter_name = 'csv'
       download_matrix(params)
     })
@@ -447,10 +449,10 @@ module.exports = function build_control_panel(){
         return 'translate( '+ x_offset +', '+ y_trans +')'
       })
 
-  let shift_download = 40
+  // let shift_download = 40
   control_svg
     .append('g')
-    .on('click', x => {
+    .on('click', () => {
       params.download.delimiter_name = 'tsv'
       download_matrix(params)
     })
@@ -474,7 +476,7 @@ module.exports = function build_control_panel(){
 
   control_svg
     .append('g')
-    .on('click', x => {
+    .on('click', () => {
       params.download.delimiter_name = 'tuple'
       download_matrix(params)
     })
@@ -536,7 +538,7 @@ module.exports = function build_control_panel(){
 
   control_svg
     .append('g')
-    .on('click', x => {
+    .on('click', () => {
       params.download.meta_type = 'col'
       download_metadata(params)
     })
@@ -560,7 +562,7 @@ module.exports = function build_control_panel(){
 
   control_svg
     .append('g')
-    .on('click', x => {
+    .on('click', () => {
       params.download.meta_type = 'row'
       download_metadata(params)
     })
@@ -582,6 +584,8 @@ module.exports = function build_control_panel(){
         return 'translate( '+ x_offset +', '+ y_trans +')'
       })
 
+
+  require("./build_v1_control_panel")(cgm, params);
 
 };
 
