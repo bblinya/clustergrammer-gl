@@ -17,6 +17,13 @@ module.exports = function make_matrix_args(){
   params.arrs = {};
   params.arrs.opacity_arr = make_opacity_arr(params);
 
+  // var is_nan_arr = [].concat.apply([], params.mat_data);
+  // params.arrs.is_nan_arr = is_nan_arr.map(x => isNaN(x))
+
+  // var is_nan_buffer = regl.buffer({
+  //   type: 'bool', usage: 'dynamic',
+  // })(params.arrs.is_nan_arr);
+
   params.arrs.position_arr = {};
 
   params.arrs.position_arr.ini = make_position_arr(params,
@@ -91,14 +98,16 @@ module.exports = function make_matrix_args(){
 
     void main() {
 
-      if (opacity_vary > 0.0){
-        // gl_FragColor = vec4(1, 0, 0, abs(opacity_vary));
-        gl_FragColor = vec4(pos_rgb, abs(opacity_vary));
-      } else if (-0.05 < opacity_vary && opacity_vary < 0.05) {
-        gl_FragColor = vec4(0.66, 0.66, 0.66, 1);
+      if (opacity_vary > 1.0) {
+        gl_FragColor = vec4(0.77, 0.77, 0.77, 1);
       } else {
-        // gl_FragColor = vec4(0, 0, 1, abs(opacity_vary));
-        gl_FragColor = vec4(neg_rgb, abs(opacity_vary));
+        if (opacity_vary > 0.0){
+          // gl_FragColor = vec4(1, 0, 0, abs(opacity_vary));
+          gl_FragColor = vec4(pos_rgb, abs(opacity_vary));
+        } else {
+          // gl_FragColor = vec4(0, 0, 1, abs(opacity_vary));
+          gl_FragColor = vec4(neg_rgb, abs(opacity_vary));
+        }
       }
 
     }`;
@@ -122,7 +131,7 @@ module.exports = function make_matrix_args(){
       opacity_att: {
         buffer: opacity_buffer,
         divisor: 1
-        }
+        },
     },
     blend: {
         enable: true,

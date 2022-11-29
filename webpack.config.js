@@ -4,7 +4,14 @@ var DEBUG = process.argv.indexOf('-p') === -1;
 var path = require("path");
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-const build_dir = path.join(__dirname, "build/")
+const build_dir = path.join(__dirname, "build/");
+
+const externals = {
+    'jQuery': 'jquery',
+    // 'lodash': '_',
+    'underscore': '_',
+    'd3': 'd3'
+};
 
 module.exports = [
   {
@@ -18,12 +25,7 @@ module.exports = [
       libraryTarget: 'var',
       library: 'CGM'
     },
-    externals: {
-      // 'jQuery': 'jquery',
-      // 'lodash': '_',
-      // 'underscore': '_',
-      // 'd3': 'd3'
-    },
+    externals: externals,
     module: {
         rules: [
           // This applies the loader to all of your dependencies,
@@ -71,12 +73,7 @@ module.exports = [
         libraryTarget: 'commonjs2',
         library: 'CGM'
       },
-      externals: {
-        // 'jQuery': 'jQuery',
-        // 'lodash': '_',
-        // 'underscore': '_',
-        // 'd3': 'd3'
-      },
+      externals: externals,
       module: {
         rules: [
           // This applies the loader to all of your dependencies,
@@ -112,12 +109,7 @@ module.exports = [
         libraryTarget: 'var',
         library: 'CGM'
       },
-      externals: {
-        'jQuery': 'jQuery',
-        // 'lodash': '_',
-        // 'underscore': '_',
-        // 'd3': 'd3'
-      },
+      externals: externals,
       optimization: {
         minimize: true
       },
@@ -156,12 +148,7 @@ module.exports = [
         libraryTarget: 'commonjs2',
         library: 'CGM'
       },
-      externals: {
-        'jQuery': 'jQuery',
-        // 'lodash': '_',
-        // 'underscore': '_',
-        // 'd3': 'd3'
-      },
+      externals: externals,
       optimization: {
         minimize: true
       },

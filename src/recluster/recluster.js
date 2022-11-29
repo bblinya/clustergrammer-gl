@@ -31,30 +31,52 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
   // constructing new nodes from old view (does not work when filtering)
 
   new_view.nodes = {};
-  new_view.nodes.row_nodes = _.clone(cgm.params.network.row_nodes);
-  new_view.nodes.col_nodes = _.clone(cgm.params.network.col_nodes);
+  // shallow reference into original nodes.
+  //  new operation on new_view will effect network data.
+  new_view.nodes.row_nodes = cgm.params.network.row_nodes;
+  new_view.nodes.col_nodes = cgm.params.network.col_nodes;
+  // new_view.nodes.row_nodes = _.clone(cgm.params.network.row_nodes);
+  // new_view.nodes.col_nodes = _.clone(cgm.params.network.col_nodes);
+
+  let mat = _.map(cgm.params.network.mat, _.clone);
 
   cgm.params.tree = {}
+  // col must be after row.
   _.each(['row', 'col'], function(axis){
 
-    var mat;
+    // var mat;
     var transpose = math.transpose;
-    var names;
-    var name_nodes;
+    var name_nodes = axis + "_nodes";
+    // row or column nodes
+    var rc_nodes = new_view.nodes[name_nodes];
+    var names = rc_nodes.map(x => x.name.split(': ')[1]);
 
-    if (axis === 'row'){
-      mat = _.clone(cgm.params.network.mat);
+    if (axis == 'col') { mat = transpose(mat); }
 
-      names = cgm.params.network.row_nodes.map(x => x.name.split(': ')[1]);
-      name_nodes = 'row_nodes';
+    // if (axis === 'row'){
+    //   mat = _.map(cgm.params.network.mat, _.clone);
+    //   // mat = _.clone(cgm.params.network.mat);
 
-    } else if (axis === 'col'){
-      mat = _.clone(cgm.params.network.mat);
-      mat = transpose(mat);
+    //   names = cgm.params.network.row_nodes.map(x => x.name.split(': ')[1]);
+    //   name_nodes = 'row_nodes';
 
-      names = cgm.params.network.col_nodes.map(x => x.name.split(': ')[1])
-      name_nodes = 'col_nodes';
+    // } else if (axis === 'col'){
+    //   mat = _.map(cgm.params.network.mat, _.clone);
+    //   // mat = _.clone(cgm.params.network.mat);
+    //   mat = transpose(mat);
+
+    //   names = cgm.params.network.col_nodes.map(x => x.name.split(': ')[1])
+    //   name_nodes = 'col_nodes';
+    // }
+
+    // set NaN as default value when recluster.
+    const def_value = 0;
+    for (var i = 0; i < mat.length; i++) {
+      for (var j = 0; j < mat[i].length; j++) {
+        if (isNaN(mat[i][j])) mat[i][j] = def_value;
+      }
     }
+
 
     // average, single, complete
     var clusters = clusterfck.hcluster(mat, dist_fun[distance_metric], linkage_type);
@@ -63,9 +85,6 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
 
     var inst_node;
     var inst_order;
-
-    // row or column nodes
-    var rc_nodes = new_view.nodes[name_nodes];
 
     for (var index=0; index < rc_nodes.length; index++){
 
@@ -79,7 +98,6 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
     }
 
   });
-
 
   // cgm.new_view = new_view
 

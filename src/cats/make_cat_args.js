@@ -37,8 +37,6 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
     cat_width = (params.viz_dim.heat_size.y/0.5)/num_labels;
   }
 
-  console.log("axis category:", inst_axis, cat_height, cat_width)
-
   var zoom_function = function(context){
     return context.view;
   };

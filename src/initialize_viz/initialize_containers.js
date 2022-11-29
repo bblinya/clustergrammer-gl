@@ -9,6 +9,11 @@ module.exports = function initialize_containers(){
     .attr('class', 'control-container')
     .style('cursor', 'default');
 
+  d3.select(base_container)
+    .append('div')
+    .attr('class', 'v1-control-container')
+    .style('cursor', 'default');
+
   // make canvas container
   d3.select(base_container)
     .append('div')

@@ -7,8 +7,8 @@ module.exports = function viz_from_network(external_model){
   // define parameters and run visualization
   this.initialize_params(external_model);
 
-  this.params_bak = JSON.parse(JSON.stringify(this.params));
-  console.log("after init paramnsts", this.params_bak);
+  // this.params_bak = JSON.parse(JSON.stringify(this.params));
+  // console.log("after init paramnsts", this.params_bak);
 
   this.build_control_panel();
   this.build_dendrogram_sliders();

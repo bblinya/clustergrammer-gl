@@ -7,39 +7,63 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
   const v1_height = 50;
   const v1_width = params.viz_width;
-  const container = d3.select(params.root)
-    .append("div")
+  const container = d3.select(params.root + " .v1-control-container")
     .attr('height', v1_height + "px")
     .attr('width', v1_width + 'px')
-    ;
-
-  // const v1_controller = container
-  //   .append("svg")
-  //   .classed('v1-controller', true)
-  //   .attr('height', v1_height + "px")
-  //   .attr('width', v1_width + 'px')
-  //   .on('mouseover', function() {
-  //     params.tooltip.in_bounds_tooltip = false; });
-
-  // const control_panel_color = 'white';
-  // v1_controller
-  //   .append('rect')
-  //   .attr('height', v1_height + 'px')
-  //   .attr('width', v1_width + 'px')
-  //   .attr('position', 'absolute')
-  //   .attr('fill', control_panel_color)
-  //   .attr('class', 'v1-control-panel-background')
-  // ;
-
-  const color_scheme_container = container 
-    .append('div')
+    .style("display", "flex")
+    .style('margin-top','10px')
+    .style("align-items", "center")
     .style('font-weight', 400)
     .style('font-size', '14px')
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
-    .style('position', 'absolute')
+    ;
+
+  const uploader = container
+    .append("div")
+  ;
+
+  const input_plug = uploader
+    .append("input")
+    .classed("v1-file-uploader", true)
+    .attr("type", "file")
+  ;
+
+  const select_btn = uploader
+    .append('div')
+    .classed('file_uploader_button',true)
+    .style('margin-top', '5px')
+    .style('margin-left', '5px')
+    .style('display', 'inline-block')
+    .attr('data-toggle','buttons')
+    .append('button')
+    .classed('sidebar_text', true)
+    .html('Open')
+    .attr('type','button')
+    .classed('btn',true)
+    .classed('btn-primary',true)
+    .style('width', '100%')
+    .on('click', async () => {
+
+      var files = d3
+        .select(".v1-control-container .v1-file-uploader")
+        .node().files;
+
+      if (files.length) {
+        const network = JSON.parse(await files[0].text());
+        cgm.network = network;
+
+        d3.select(params.root).remove();
+        cgm.viz_from_network(null);
+      }
+    });
+
+  // ========= Color Scheme Setter =========
+  const color_scheme_container = container 
+    .append('div')
+    // .style('position', 'absolute')
     .style('padding-left', '10px')
     .style('padding-right', '10px')
-    .style('margin-top','10px');
+  ;
 
   const selector_label = color_scheme_container
     .append("label")
