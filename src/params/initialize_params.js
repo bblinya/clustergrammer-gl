@@ -16,7 +16,7 @@ module.exports = function initialize_params(external_model){
     this.network[axis + '_nodes'].forEach(x => x.ini = x.ini - 1)
   })
 
-  cgm.params = {};
+  if (cgm.params == undefined) cgm.params = {};
   let params = cgm.params;
   params.network = network;
 
@@ -98,22 +98,16 @@ module.exports = function initialize_params(external_model){
   require('./../params/calc_mat_arr')(params);
 
   // matrix color paramters
-  let mat_colors = {}
-
-  if ('matrix_colors' in params.network){
-
-    console.log('found custom colors for pos/neg')
-
-    let pos_color = params.network.matrix_colors.pos
-    let neg_color = params.network.matrix_colors.neg
-
-    mat_colors.pos_rgb = color_to_rgba(pos_color).slice(0, 3)
-    mat_colors.neg_rgb = color_to_rgba(neg_color).slice(0, 3)
-  } else {
-    mat_colors.pos_rgb = [1, 0, 0]
-    mat_colors.neg_rgb = [0, 0, 1]
+  if (!('matrix_colors' in params.network)) {
+    params.network.matrix_colors = {
+      pos: 'red', neg: 'blue', };
   }
+  let pos_color = params.network.matrix_colors.pos
+  let neg_color = params.network.matrix_colors.neg
 
+  let mat_colors = {}
+  mat_colors.pos_rgb = color_to_rgba(pos_color).slice(0, 3)
+  mat_colors.neg_rgb = color_to_rgba(neg_color).slice(0, 3)
   params.viz.mat_colors = mat_colors
 
   // attach to cgm so it can be run without passing arguments

@@ -16,7 +16,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .style('font-weight', 400)
     .style('font-size', '14px')
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
-    ;
+    .on('mouseover', function(){
+      params.tooltip.in_bounds_tooltip = false;
+    })
+  ;
 
   const uploader = container
     .append("div")
@@ -25,14 +28,14 @@ module.exports = function build_v1_control_panel(cgm, params) {
   const input_plug = uploader
     .append("input")
     .classed("v1-file-uploader", true)
+    .style("width", "200px")
     .attr("type", "file")
   ;
 
   const select_btn = uploader
     .append('div')
     .classed('file_uploader_button',true)
-    .style('margin-top', '5px')
-    .style('margin-left', '5px')
+    // .style('margin-left', '5px')
     .style('display', 'inline-block')
     .attr('data-toggle','buttons')
     .append('button')
@@ -49,11 +52,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
         .node().files;
 
       if (files.length) {
-        const network = JSON.parse(await files[0].text());
-        cgm.network = network;
-
-        d3.select(params.root).remove();
-        cgm.viz_from_network(null);
+        const json_file = JSON.parse(await files[0].text());
+        window.sessionStorage.setItem(
+          "json_file", JSON.stringify(json_file))
+        window.location.reload();
       }
     });
 
@@ -67,10 +69,11 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
   const selector_label = color_scheme_container
     .append("label")
-    .style('height', '20px')
+    // .style('height', '20px')
+    .style("margin-left", "5px")
     .style('font-weight', 400)
     .attr("for", "color-scheme-selector")
-    .html("Choose color scheme: ")
+    .html("Color Scheme: ")
   ;
 
   const color_schemes = [
@@ -82,7 +85,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .append("select")
     .attr("name", "color-scheme-selector")
     .attr("id", "color-scheme-selector")
-    .style('height', '20px')
+    // .style('height', '20px')
     .style('display', 'inline-block')
     .style('padding', '1pt 2pt')
     .on("change", () => { 
