@@ -70,7 +70,7 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
     // }
 
     // set NaN as default value when recluster.
-    const def_value = 0;
+    const def_value = NaN; // 0, Infinity
     for (var i = 0; i < mat.length; i++) {
       for (var j = 0; j < mat[i].length; j++) {
         if (isNaN(mat[i][j])) mat[i][j] = def_value;
@@ -80,6 +80,7 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
 
     // average, single, complete
     var clusters = clusterfck.hcluster(mat, dist_fun[distance_metric], linkage_type);
+    // console.log("clusters trees: ", clusters.tree);
 
     var order_info = get_order_and_groups_clusterfck_tree(clusters, names, cgm, axis);
 

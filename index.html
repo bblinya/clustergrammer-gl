@@ -46,7 +46,8 @@
       .style('margin-left', x_offset + 'px')
       .style('margin-top', y_offset + 'px');
 
-    var filename = './build/data/mult_view.json';
+    // var filename = './build/data/mult_view.json';
+    var filename = './build/data/big_data_mult_view.json';
 
     var my_widget_callback = function(external_model){
       console.log('-------------------------------')
@@ -57,7 +58,7 @@
     var json_file = window.sessionStorage.getItem("json_file");
     if (json_file) {
         window.sessionStorage.removeItem("json_file");
-        const cgm = CGM({
+        cgm = CGM({
             network: JSON.parse(json_file),
             container: inst_container,
             viz_width: inst_width,
@@ -67,7 +68,7 @@
         });
     } else {
         d3.json(filename).then(function(network) {
-            const cgm = CGM({
+            cgm = CGM({
                 network: network,
                 container: inst_container,
                 viz_width: inst_width,

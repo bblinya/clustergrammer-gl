@@ -14,65 +14,70 @@ var HierarchicalClustering = function(distance, linkage, threshold) {
 }
 
 HierarchicalClustering.prototype = {
-   tree: function(items, snapshotPeriod, snapshotCb) {
-      this.tree = [];
-      this.dists = [];  // distances between each pair of clusters
-      this.mins = []; // closest cluster for each cluster
-      this.index = []; // keep a hash of all clusters by key
+  tree: function(items, snapshotPeriod, snapshotCb) {
+    this.tree = [];
+    this.dists = [];  // distances between each pair of clusters
+    this.mins = []; // closest cluster for each cluster
+    this.index = []; // keep a hash of all clusters by key
 
 
-      for (var i = 0; i < items.length; i++) {
-         var cluster = {
-            value: items[i],
-            key: i,
-            index: i,
-            size: 1
-         };
-         this.tree[i] = cluster;
-         this.index[i] = cluster;
-         this.dists[i] = [];
-         this.mins[i] = 0;
-      }
+    for (var i = 0; i < items.length; i++) {
+      var cluster = {
+        value: items[i],
+        key: i,
+        index: i,
+        size: 1
+      };
+      this.tree[i] = cluster;
+      this.index[i] = cluster;
+      this.dists[i] = [];
+      this.mins[i] = 0;
+    }
 
-      // Calculate Distance Matrix
-      for (var i = 0; i < this.tree.length; i++) {
+    // Calculate Distance Matrix
+    for (var i = 0; i < this.tree.length; i++) {
 
-         for (var j = 0; j <= i; j++) {
-            var dist = (i == j) ? Infinity :
-               this.distance(this.tree[i].value, this.tree[j].value);
-            this.dists[i][j] = dist;
-            this.dists[j][i] = dist;
+      for (var j = 0; j <= i; j++) {
+        var dist = (i == j) ? Infinity :
+          this.distance(this.tree[i].value, this.tree[j].value);
+        this.dists[i][j] = dist;
+        this.dists[j][i] = dist;
 
-            if (dist < this.dists[i][this.mins[i]]) {
-               this.mins[i] = j;
-            }
-
-         }
-      }
-
-      // this.dists_backup = $.extend(true, [], this.dists);
-      this.dists_backup = _.clone(this.dists);
-
-      var merged = this.mergeClosest();
-      var i = 0;
-      while (merged) {
-        if (snapshotCb && (i++ % snapshotPeriod) == 0) {
-           snapshotCb(this.tree);
+        if (dist < this.dists[i][this.mins[i]]) {
+          this.mins[i] = j;
         }
-        merged = this.mergeClosest();
+
       }
+    }
 
-      // do not remove index or key
-      ///////////////////////////////
-      // this.tree.forEach(function(cluster) {
-      //   // clean up metadata used for clustering
-      //   delete cluster.key;
-      //   delete cluster.index;
-      // });
+    // this.dists_backup = $.extend(true, [], this.dists);
+    this.dists_backup = _.clone(this.dists);
+    console.log("dist calculated: ", this.dists);
+
+    var merged = this.mergeClosest();
+    if (!merged) {
+      alert(`clusters cannot be merged, skip.`);
+    }
+
+    var i = 0;
+    while (merged) {
+      if (snapshotCb && (i++ % snapshotPeriod) == 0) {
+        snapshotCb(this.tree);
+      }
+      merged = this.mergeClosest();
+    }
+
+    // do not remove index or key
+    ///////////////////////////////
+    // this.tree.forEach(function(cluster) {
+    //   // clean up metadata used for clustering
+    //   delete cluster.key;
+    //   delete cluster.index;
+    // });
 
 
-      return this.tree;
-   },
+    return this.tree;
+  },
 
    mergeClosest: function() {
       // find two closest clusters from cached mins
@@ -86,7 +91,7 @@ HierarchicalClustering.prototype = {
          }
       }
       if (min >= this.threshold) {
-         return false;
+        return false;
       }
 
       var c1 = this.index[minKey],

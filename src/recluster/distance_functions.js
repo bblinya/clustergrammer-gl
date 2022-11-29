@@ -37,17 +37,17 @@ function vec_mean(vec){
 module.exports = {
 
   'euclidean': function(v1, v2) {
-      var total = 0;
-      for (var i = 0; i < v1.length; i++) {
-        total = total + Math.pow(v2[i] - v1[i], 2);
-      }
+    var total = 0;
+    for (var i = 0; i < v1.length; i++) {
+      total = total + Math.pow(v2[i] - v1[i], 2);
+    }
     return Math.sqrt(total);
-   },
-   'cosine': function(vecA, vecB) {
+  },
+  'cosine': function(vecA, vecB) {
 
-      var cos_sim = vec_dot_product(vecA, vecB) / (vec_magnitude(vecA) * vec_magnitude(vecB));
+    var cos_sim = vec_dot_product(vecA, vecB) / (vec_magnitude(vecA) * vec_magnitude(vecB));
 
-      var cos_dist = 1 - cos_sim;
+    var cos_dist = 1 - cos_sim;
 
     return cos_dist;
   },

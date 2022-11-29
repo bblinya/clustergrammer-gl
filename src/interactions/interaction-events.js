@@ -365,7 +365,7 @@ function interactionEvents (opts) {
     if (enabled) {return;}
     enabled = true;
     changeListener.enabled = true;
-    // element.addEventListener('wheel', onWheel, false);
+    element.addEventListener('wheel', onWheel, false);
     element.addEventListener('mousedown', onMouseDown, false);
     element.addEventListener('mousemove', onMouseMove, false);
 
@@ -379,7 +379,7 @@ function interactionEvents (opts) {
     if (!enabled) {return;}
     enabled = false;
     changeListener.enabled = false;
-    // element.removeEventListener('wheel', onWheel, false);
+    element.removeEventListener('wheel', onWheel, false);
     element.removeEventListener('mousedown', onMouseDown, false);
     element.removeEventListener('mousemove', onMouseMove, false);
 
