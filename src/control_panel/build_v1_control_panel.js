@@ -172,6 +172,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
       // require('./../cameras/make_cameras')(cgm.regl, params);
       // require('./../params/calc_mat_arr')(params);
+      // require('../params/generate_cat_args_arrs')(
+      //   cgm.regl, params);
+      // cgm.zoom_rules_high_mat(cgm.regl, params, external_model);
+      params.zoom_restrict = require('./../zoom/ini_zoom_restrict')(params);
       draw_webgl_layers(cgm);
 
       const slider_length = 130;

@@ -139,11 +139,12 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
   // Row Titles
   // pos_x = 125;
   // var pos_y = 98; // 60 with no cats, 72 with one cat, 85 with two cats
-  // pos_y = 62 + 12 * params.cat_data.col.length;
+  var pos_y = 62 + 12 * params.cat_data.col.length;
   var row_cat_title_group = d3.select(params.root + ' .canvas-container')
     .append('g')
     .style('position', 'absolute')
-    .style('top', params.cat_title_offset_col + 'px')
+    // .style('top', params.cat_title_offset_col + 'px')
+    .style('top', pos_y + 'px')
     .style('left', params.cat_title_offset_row + 'px')
     .classed('row-cat-title-group', true);
 

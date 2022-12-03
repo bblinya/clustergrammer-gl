@@ -40,7 +40,10 @@ module.exports = function calc_vd(regl, params){
   var inst_other_label;
   var inst_dim;
   var offset_heat = {};
-  var offcenter_magnitude = 0.075;
+
+
+  // var offcenter_magnitude = 0.075;
+  var offcenter_magnitude = 0;
 
   _.each(['x', 'y'], function(inst_axis){
 

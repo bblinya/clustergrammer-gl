@@ -51,16 +51,16 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
 
   var xrange = opts.xrange === undefined ? [-1, 1] : opts.xrange;
   var yrange = opts.yrange === undefined ? [-1, 1] : opts.yrange;
-  var aspectRatio = opts.aspectRatio === undefined ? 1 : opts.aspectRatio;
+  // var aspectRatio = opts.aspectRatio === undefined ? 1 : opts.aspectRatio;
 
   var width = getWidth();
   var height = getHeight();
-  console.log("canvas size: ", element, width, height);
 
   var xcen = 0.5 * (xrange[1] + xrange[0]) + params.viz_dim.shift_camera.x;
   var ycen = 0.5 * (yrange[1] + yrange[0]) + params.viz_dim.shift_camera.y;
   var xrng = 0.5 * (xrange[1] - xrange[0]);
-  var yrng = xrng / aspectRatio / width * height;
+  var yrng = 0.5 * (yrange[1] - yrange[0]);
+  // var yrng = xrng / aspectRatio / width * height;
 
   var mView = mat4.identity([]);
   mView[0] = 1 / xrng;
@@ -166,7 +166,7 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
       computeViewport();
 
       // Reapply the aspect ratio:
-      mView[5] = mView[0] * aspectRatio * width / height;
+      // mView[5] = mView[0] * aspectRatio * width / height;
       dirty = true;
 
     }
