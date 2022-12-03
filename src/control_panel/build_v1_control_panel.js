@@ -115,4 +115,80 @@ module.exports = function build_v1_control_panel(cgm, params) {
     ;
   }
 
+  // =========== Canvas Size ==========
+  const canvas_plug = container.append("div");
+
+  canvas_plug
+    .append("label")
+    .html("H:")
+  ;
+
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.viz_height)
+    .style("width", "50px")
+    .classed("v1-canvas-height", true)
+  ;
+
+  canvas_plug
+    .append("label")
+    .html("W:")
+  ;
+
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.viz_width)
+    .style("width", "50px")
+    .classed("v1-canvas-width", true)
+  ;
+
+  canvas_plug
+    .append('button')
+    .html('Resize')
+    .attr('type','button')
+    .on("click", () => {
+      const height = d3.select(params.root + " .v1-canvas-height")
+        .node().value;
+      const width = d3.select(params.root + " .v1-canvas-width")
+        .node().value;
+
+      params.viz_height = height;
+      params.viz_width = width;
+
+      d3.select(params.root + " .canvas-container")
+        .style("height", height + "px")
+        .style("width", width + "px")
+      ;
+
+      const canvas = cgm.regl._gl.canvas;
+      // canvas.width = width;
+      canvas.style.width = width + "px";
+      // canvas.height = height;
+      canvas.style.height = height + "px";
+
+      console.log(width, height, canvas);
+
+      // require('./../cameras/make_cameras')(cgm.regl, params);
+      // require('./../params/calc_mat_arr')(params);
+      draw_webgl_layers(cgm);
+
+      const slider_length = 130;
+      const slider_width = 25;
+
+      _.each(['row', 'col'], function(axis) {
+        var slider = d3.select(
+          "." + axis + "_dendro_slider_svg");
+        if (axis === 'row') {
+          slider.style("left",
+            (params.viz_width - slider_width) + "px");
+        } else {
+          pos_top = params.viz_height - (slider_length / 2) - slider_width;
+          slider.style("top", pos_top + "px");
+        }
+
+      });
+    });
+
 }

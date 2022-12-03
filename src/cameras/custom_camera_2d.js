@@ -41,14 +41,13 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
 
   var dirty = true;
 
-  var getWidth = element === window ?
+  var getWidth = element === window
+    ? function () { return element.innerWidth; }
+    : function () { return element.offsetWidth; };
 
-
-  function () { return element.innerWidth; } : function () { return element.offsetWidth; };
-
-  var getHeight = element === window ?
-
-  function () { return element.innerHeight; } : function () { return element.offsetHeight; };
+  var getHeight = element === window
+    ? function () { return element.innerHeight; }
+    : function () { return element.offsetHeight; };
 
   var xrange = opts.xrange === undefined ? [-1, 1] : opts.xrange;
   var yrange = opts.yrange === undefined ? [-1, 1] : opts.yrange;
@@ -56,6 +55,7 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
 
   var width = getWidth();
   var height = getHeight();
+  console.log("canvas size: ", element, width, height);
 
   var xcen = 0.5 * (xrange[1] + xrange[0]) + params.viz_dim.shift_camera.x;
   var ycen = 0.5 * (yrange[1] + yrange[0]) + params.viz_dim.shift_camera.y;
@@ -133,6 +133,8 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
   //                        emitter, dViewport, mViewport);
   //   }
   // });
+
+  // console.log("view: ", mView, regl.prop("view"));
 
   var setProps = regl({
     context: {

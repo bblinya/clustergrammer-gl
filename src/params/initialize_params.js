@@ -94,7 +94,6 @@ module.exports = function initialize_params(external_model){
   cgm.zoom_rules_high_mat(regl, params, external_model);
 
   require('./../cameras/make_cameras')(regl, params);
-
   require('./../params/calc_mat_arr')(params);
 
   // matrix color paramters

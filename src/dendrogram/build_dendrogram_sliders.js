@@ -32,6 +32,8 @@ module.exports = function build_dendrogram_sliders(){
     }
     console.log(inst_top, inst_left)
 
+    // axis_class = " ." + axis + "-slider";
+    // axis_slider_container = d3.select(params.root + axis_class)
     axis_slider_container = d3.select(params.root + ' .canvas-container')
       .append('svg')
       .style('height', slider_length + 'px')

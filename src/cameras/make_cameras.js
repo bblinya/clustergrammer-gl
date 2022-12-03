@@ -8,6 +8,7 @@ module.exports = function make_cameras(regl, params){
   var zoom_data = params.zoom_data;
 
   const cameras = {};
+  // set initial zoom range for matrix cell
   var ini_scale = 1.0 ;
   var zoom_range = {
       xrange: [-ini_scale, ini_scale],
