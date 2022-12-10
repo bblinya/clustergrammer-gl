@@ -173,23 +173,23 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
       require('../params/calc_viz_dim')(cgm.regl, params);
       require('../params/generate_cat_args_arrs')(cgm.regl, params);
-      // params.canvas_pos = require('../params/calc_row_and_col_canvas_positions')(params);
+      params.canvas_pos = require('../params/calc_row_and_col_canvas_positions')(params);
 
-      // _.each(['row', 'col'], function(inst_axis){
-      //   require('../matrix_labels/calc_text_offsets')(params, inst_axis);
-      // });
+      _.each(['row', 'col'], function(inst_axis){
+        require('../matrix_labels/calc_text_offsets')(params, inst_axis);
+      });
 
-      // const heat = params.viz_dim.heat;
-      // const labels = params.labels;
-      // params.tile_pix_width = heat.width / labels.num_col;
-      // params.tile_pix_height = heat.height / labels.num_row;
+      const heat = params.viz_dim.heat;
+      const labels = params.labels;
+      params.tile_pix_width = heat.width / labels.num_col;
+      params.tile_pix_height = heat.height / labels.num_row;
 
-      // require('../params/gen_pix_to_webgl')(params);
-      // require('../params/generate_webgl_to_pix')(params);
-      // require('../matrix_labels/make_label_queue')(params);
-      // require('../params/gen_text_zoom_par')(params);
-      // require('../params/calc_viz_area')(params);
-      // require('../params/generate_text_triangle_params')(params);
+      require('../params/gen_pix_to_webgl')(params);
+      require('../params/generate_webgl_to_pix')(params);
+      require('../matrix_labels/make_label_queue')(params);
+      require('../params/gen_text_zoom_par')(params);
+      require('../params/calc_viz_area')(params);
+      require('../params/generate_text_triangle_params')(params);
 
       params.zoom_restrict = require('../zoom/ini_zoom_restrict')(params);
       require('../params/calc_mat_arr')(params);
