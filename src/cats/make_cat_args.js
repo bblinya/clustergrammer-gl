@@ -25,7 +25,7 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
   var cat_width;
   var mat_size;
   var top_shift_triangles;
-  cat_height = 0.04;
+  // cat_height = 0.04;
   if (inst_axis === 'col'){
     mat_size = params.viz_dim.heat_size.x;
     top_shift_triangles = params.viz_dim.mat_size.y;
@@ -41,7 +41,11 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
     return context.view;
   };
 
-  var shift_cat = 0.025 * (cat_index + 1);
+  var dims = { row: 'x', col: 'y' };
+  var total_height = params.cat_data.cat_room[dims[inst_axis]] * 2;
+  var init_shift_cat = 0.002;
+  cat_height = (total_height - init_shift_cat * 2) * 2;
+  var shift_cat = total_height * (cat_index + 1) - init_shift_cat;
   var top_offset = -top_shift_triangles - cat_height + shift_cat;
 
   /////////////////////////////////
@@ -214,7 +218,6 @@ module.exports = function make_cat_args(regl, params, inst_axis, cat_index){
 
         // depth is being set to 0.45
         gl_Position = zoom * vec4( vec2(new_position), 0.45, 1);
-
         // pass attribute (in vert) to varying in frag
         color_vary = color_att;
 

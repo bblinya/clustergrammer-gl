@@ -56,27 +56,13 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
   }
 
   // Column Titles
-  params.cat_title_offset_row = 125;
-  params.cat_title_offset_col = 125;
-
-  var pos_x = params.viz_width - 55; // 845;
   var col_cat_title_group = d3.select(params.root + ' .canvas-container')
     .append('g')
     .style('position', 'absolute')
-    .style('top', params.cat_title_offset_col + 'px')
-    .style('left', pos_x + 'px')
     .classed('col-cat-title-group', true);
-
-  var dim_x = 55;
-  var dim_y = 10;
 
   var col_cat_title_svg = col_cat_title_group
     .append('svg')
-    .style('height', function(){
-      var svg_height = dim_y * params.cat_data.col.length + 5;
-      return svg_height  + 'px'
-    })
-    .style('width', dim_x + 'px')
     .classed('col-cat-title-svg', true);
 
   var col_cat_reorder_group = col_cat_title_svg
@@ -88,27 +74,19 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
     .data(params.cat_data.col)
     .enter()
     .append('text')
-    .text(function(d){
-      return d.cat_title;
-    })
+    .text(function(d){ return d.cat_title; })
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
     .style('font-weight',  800)
     .style('font-size', 12)
-    .attr('transform', function(d, i){
-      var y_trans = (dim_y + 1) * i + 10 ;
-      return 'translate( 0, '+ y_trans +')';
-    })
+    .attr('index', (d, i) => i)
+    .classed('col-cat-title-text', true)
 
   col_cat_reorder_group
     .selectAll('rect')
     .data(params.cat_data.col)
     .enter()
     .append('rect')
-    .style('width', dim_x + 'px')
-    .style('height', function(){
-      var rect_height = dim_y + 2;
-      return rect_height + 'px'
-    })
+    .classed('col-cat-title-rect', true)
     .style('fill', 'white')
     .style('opacity', 0.0)
     .on('dblclick', function(d, i){
@@ -129,72 +107,65 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
         .attr('stroke', button_color);
 
     })
-    .attr('transform', function(d, i){
-      var y_trans = (dim_y + 2)* i ;
-      return 'translate( 0, '+ y_trans +')';
-    })
     .style('user-select', 'none');
+
+  params.adjust_col_cat_titles = function (params) {
+    var col_title = params.viz_dim.cat_title.col;
+    d3.select(params.root + ' .col-cat-title-group')
+      .style('top', col_title.top + 'px')
+      .style('left', col_title.left + 'px')
+    ;
+
+    var dim_x = 55;
+    var dim_y = col_title.width;
+    d3.selectAll(params.root + ' .col-cat-title-text')
+      .attr('transform', function(d, i) {
+        var y_trans = dim_y * (i + 1);
+        return 'translate( 0, '+ y_trans +')';
+      });
+    d3.selectAll(params.root + ' .col-cat-title-rect')
+      .style('width', dim_x + 'px')
+      .style('height', function(){ return dim_y + 'px' })
+      .attr('transform', function(d, i) {
+        var y_trans = dim_y * i;
+        return 'translate( 0, '+ y_trans +')';
+      });
+  }
+  params.adjust_col_cat_titles(params);
 
 
   // Row Titles
-  // pos_x = 125;
-  // var pos_y = 98; // 60 with no cats, 72 with one cat, 85 with two cats
-  var pos_y = 62 + 12 * params.cat_data.col.length;
   var row_cat_title_group = d3.select(params.root + ' .canvas-container')
     .append('g')
     .style('position', 'absolute')
-    // .style('top', params.cat_title_offset_col + 'px')
-    .style('top', pos_y + 'px')
-    .style('left', params.cat_title_offset_row + 'px')
     .classed('row-cat-title-group', true);
-
-  var row_dim_x = 60;
-  var row_dim_y = 10;
 
   var row_cat_title_svg = row_cat_title_group
     .append('svg')
-    .style('width', function(){
-      var svg_height = row_dim_y * params.cat_data.row.length + 5;
-      return svg_height  + 'px'
-    })
-    .style('height', row_dim_x + 'px')
     .classed('row-cat-title-svg', true);
 
   var inst_rotate;
   var row_cat_reorder_group = row_cat_title_svg
     .append('g')
     .classed('row-cat-reorder-group', true)
-    .attr('transform', function(){
-        inst_rotate = -90;
-        return 'translate(0,' + row_dim_x + '), rotate('+ inst_rotate +')';
-      });
 
   row_cat_reorder_group
     .selectAll('rect')
     .data(params.cat_data.row)
     .enter()
     .append('text')
-    .text(function(d){
-      return d.cat_title;
-    })
+    .text(function(d){ return d.cat_title; })
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
     .style('font-weight',  800)
     .style('font-size', 12)
-    .attr('transform', function(d, i){
-      var y_trans = (row_dim_y + 1) * i  + 10 ;
-      return 'translate( 0, '+ y_trans +')';
-    })
+    .classed('row-cat-title-text', true)
 
   row_cat_reorder_group
     .selectAll('rect')
     .data(params.cat_data.row)
     .enter()
     .append('rect')
-    .style('width', row_dim_x + 'px')
-    .style('height', function(){
-      var rect_height = row_dim_y + 2;
-      return rect_height + 'px'
-    })
+    .classed('row-cat-title-rect', true)
     .style('fill', 'white')
     .style('opacity', 0.0)
     .on('dblclick', function(d, i){
@@ -211,11 +182,37 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
         .attr('stroke', button_color);
 
     })
-    .attr('transform', function(d, i){
-      var y_trans = (row_dim_y + 2)* i ;
-      return 'translate( 0, '+ y_trans +')';
-    })
     .style('user-select', 'none');
+
+  params.adjust_row_cat_titles = function (params) {
+    var row_title = params.viz_dim.cat_title.row;
+    var row_dim_x = 60;
+    var row_dim_y = row_title.width;
+    var row_height = row_dim_y * params.cat_data.row.length;
+
+    d3.select(params.root + ' .row-cat-title-group')
+      .style('top', (row_title.top - row_dim_x) + 'px')
+      .style('left', row_title.left + 'px');
+    d3.select(params.root + ' .row-cat-reorder-group')
+      .attr('transform', function(){
+          inst_rotate = -90;
+          return 'translate(0,' + row_dim_x + '), rotate('+ inst_rotate +')';
+        });
+    d3.selectAll(params.root + ' .row-cat-title-text')
+      .attr('transform', function(d, i) {
+        var y_trans = row_title.width * (i + 1);
+        return 'translate( 0, '+ y_trans +')';
+      });
+    d3.selectAll(params.root + ' .row-cat-title-rect')
+      .style('width', row_dim_x + 'px')
+      .style('height', function(){ return row_dim_y + 'px' })
+      .attr('transform', function(d, i) {
+        var y_trans = row_dim_y * i;
+        return 'translate( 0, '+ y_trans +')';
+      });
+  }
+  params.adjust_row_cat_titles(params);
+
 
 
 };

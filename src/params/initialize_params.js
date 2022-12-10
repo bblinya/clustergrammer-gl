@@ -47,6 +47,9 @@ module.exports = function initialize_params(external_model){
   // console.log('generate_tooltip_params')
   require('./generate_tooltip_params')(regl, params);
 
+  params.viz_height = args.viz_height; //inst_height;
+  params.viz_width = args.viz_width; // inst_width;
+
   require('./calc_viz_dim')(regl, params);
   require('./generate_cat_args_arrs')(regl, params);
   params.zoom_data = require('./../zoom/ini_zoom_data')();
@@ -127,9 +130,6 @@ module.exports = function initialize_params(external_model){
 
 
   params.hzome = hzome_functions(params);
-
-  params.viz_height = args.viz_height; //inst_height;
-  params.viz_width = args.viz_width; // inst_width;
 
   params.root = '#' + args.container.id;
   params.canvas_root = params.root + ' .canvas-container';

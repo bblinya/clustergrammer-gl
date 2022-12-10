@@ -119,7 +119,9 @@ module.exports = function find_mouseover_element(regl, params, ev){
       // have a look at this later, console log errors occur sometimes when moving mouse around
       try {
         params.int.mouseover.value = params.mat_data[axis_indices.row][axis_indices.col];
-      } catch (e) { }
+      } catch (e) { 
+        console.log("mouse over error:", axis_indices);
+      }
 
       if ('mat_data_iz' in params){
         params.int.mouseover.value_iz = params.mat_data_iz[axis_indices.row][axis_indices.col];
