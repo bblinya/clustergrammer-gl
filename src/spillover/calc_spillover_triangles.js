@@ -10,7 +10,9 @@ module.exports = function calc_spillover_triangles(params){
   var ini_mat = viz_dim.mat_size;
   var ini_heat = viz_dim.heat_size;
 
-  var height_to_width = viz_dim.canvas.height/viz_dim.canvas.width;
+  // var height_to_width = viz_dim.canvas.height/viz_dim.canvas.width;
+  // fucking awesome, shit code!!!!
+  var height_to_width = 1;
 
   var scaled_mat = {};
   scaled_mat.x = ini_mat.x / height_to_width;
