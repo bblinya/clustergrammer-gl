@@ -147,6 +147,32 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .classed("v1-canvas-width", true)
   ;
 
+  canvas_plug
+    .append("label")
+    .html("L:")
+  ;
+
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.layout.left)
+    .style("width", "50px")
+    .classed("v1-edge-left", true)
+  ;
+
+  canvas_plug
+    .append("label")
+    .html("T:")
+  ;
+
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.layout.top)
+    .style("width", "50px")
+    .classed("v1-edge-top", true)
+  ;
+
   cgm.adjust_canvas_size = function(width, height) {
     var cgm = this;
     var params = this.params;
@@ -163,6 +189,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
     const labels = params.labels;
     params.viz_height = height;
     params.viz_width = width;
+
+    var layout = params.layout || {};
+    layout.left = parseInt(d3.select(" .v1-edge-left").node().value);
+    layout.top = parseInt(d3.select(".v1-edge-top").node().value);
 
     require('../params/calc_viz_dim')(cgm.regl, params);
     require('../params/generate_cat_args_arrs')(cgm.regl, params);
@@ -197,7 +227,6 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
     const slider_length = 130;
     const slider_width = 25;
-    const layout = params.viz_dim.layout;
 
     d3.select(".row_dendro_slider_svg")
       .style("left", (params.viz_width-slider_width) + "px");
@@ -209,6 +238,62 @@ module.exports = function build_v1_control_panel(cgm, params) {
     params.adjust_row_cat_titles(params);
   }
 
+  const BORDER_SIZE = 4;
+  var canvas = d3.select(params.root + " .canvas-container")
+    .style("margin-top", "10px")
+    .style("border", BORDER_SIZE + "px solid")
+    .node();
+
+  var canvas_drag = {
+    drag: false,
+    x: false, x_pos: 0,
+    y: false, y_pos: 0,
+  }
+  function resize_x(e){
+    e.preventDefault(); e.stopPropagation();
+    const dx = e.x - canvas_drag.x_pos;
+    canvas_drag.x_pos = e.x;
+    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + dx + "px";
+  }
+  function resize_y(e) {
+    e.preventDefault(); e.stopPropagation();
+    const dy = e.y - canvas_drag.y_pos;
+    canvas_drag.y_pos = e.y;
+    canvas.style.height = parseInt(getComputedStyle(canvas, '').height) + dy + "px";
+  }
+
+  function in_range(e, x, y, width, height) {
+    return (e.x >= x && e.x <= (x + width)) && (e.y >= y && e.y <= (y + height));
+  }
+
+  document.addEventListener("mousedown", function(e){
+    var rect = canvas.getBoundingClientRect();
+    console.log(e.x, e.y, canvas_drag);
+    if (in_range(e, rect.right - BORDER_SIZE, rect.top, BORDER_SIZE, rect.height)) {
+      e.preventDefault(); e.stopPropagation();
+      canvas_drag.enabled = true;
+      canvas_drag.x_pos = e.x;
+      document.addEventListener("mousemove", resize_x, false);
+    }
+    if (in_range(e, rect.left, rect.bottom - BORDER_SIZE, rect.width, BORDER_SIZE)) {
+      e.preventDefault(); e.stopPropagation();
+      canvas_drag.enabled = true;
+      canvas_drag.y_pos = e.y;
+      document.addEventListener("mousemove", resize_y, false);
+    }
+  }, false);
+
+  document.addEventListener("mouseup", function(){
+    if (canvas_drag.enabled) {
+      canvas_drag.enabled = false;
+      document.removeEventListener("mousemove", resize_x, false);
+      document.removeEventListener("mousemove", resize_y, false);
+      var canvas_size = getComputedStyle(canvas, '');
+      cgm.adjust_canvas_size(parseInt(canvas_size.width), parseInt(canvas_size.height));
+    }
+  }, false);
+
+
   canvas_plug
     .append('button')
     .html('Resize')
@@ -219,7 +304,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
       const width = d3.select(params.root + " .v1-canvas-width")
         .node().value;
 
-      cgm.adjust_canvas_size(width, height);
+      cgm.adjust_canvas_size(parseInt(width), parseInt(height));
     });
 
 }

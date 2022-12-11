@@ -44,11 +44,13 @@ module.exports = function calc_vd(regl, params){
   var inst_dim;
   var offset_heat = {};
 
-  var layout = {};
-  layout.left = 125;
-  layout.top = 125;
-  layout.right = 55;
-  layout.bottom = 55;
+  var layout = params.layout || {};
+  layout = {
+    left: layout.left || 125,
+    top: layout.top || 125,
+    right: layout.right || 55,
+    bottom: layout.bottom || 55,
+  }
 
   function calc_layout(size, l, r) {
     var mat_size = size - l - r;
@@ -64,11 +66,9 @@ module.exports = function calc_vd(regl, params){
     }
   }
 
-  layout.x = calc_layout(params.viz_width,
-    layout.left+1, layout.right+1);
-  layout.y = calc_layout(params.viz_height,
-    layout.top, layout.bottom);
-  vd.layout = layout;
+  layout.x = calc_layout(params.viz_width, layout.left, layout.right);
+  layout.y = calc_layout(params.viz_height, layout.top, layout.bottom);
+  params.layout = layout;
 
   _.each(['x', 'y'], function(inst_axis){
 
@@ -77,7 +77,7 @@ module.exports = function calc_vd(regl, params){
     inst_dim = dim[inst_axis];
 
     // vd.mat_size[inst_axis] = 0.8;
-    vd.mat_size[inst_axis] = vd.layout[inst_axis].mat_scale;
+    vd.mat_size[inst_axis] = layout[inst_axis].mat_scale;
 
     vd.heat_size[inst_axis] = vd.mat_size[inst_axis] -
                               params.cat_data.cat_room[inst_axis] *
@@ -108,7 +108,7 @@ module.exports = function calc_vd(regl, params){
 
     vd['tile_' + inst_dim] = (vd.heat_size[inst_axis]/0.5)/params.labels['num_' + inst_other_label];
 
-    var offcenter_magnitude = vd.layout[inst_axis].offset_scale * 2;
+    var offcenter_magnitude = layout[inst_axis].offset_scale * 2;
     // var offcenter_magnitude = 0.075;
     vd.offcenter[inst_axis] = offcenter_magnitude;
 
