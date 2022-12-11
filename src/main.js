@@ -40,7 +40,6 @@ function clustergrammer_gl(args, external_model=null){
       return needResize;
     }
 
-
     cgm.initialize_params = require('./params/initialize_params');
     // cgm.decompress_network = require('./params/decompress_network');
     cgm.initialize_regl = require('./params/initialize_regl');

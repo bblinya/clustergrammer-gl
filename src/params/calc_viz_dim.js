@@ -56,8 +56,8 @@ module.exports = function calc_vd(regl, params){
     var center_offset = l + mat_size / 2 - size / 2;
     var offset_scale  = center_offset / size;
 
-    var mat_scale = 0.8;
-    var offset_scale = 0.075 / 2;
+    // var mat_scale = 0.8;
+    // var offset_scale = 0.075 / 2;
     return {
       size: mat_size, mat_scale: mat_scale,
       offset: center_offset, offset_scale: offset_scale,

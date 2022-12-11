@@ -147,6 +147,68 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .classed("v1-canvas-width", true)
   ;
 
+  cgm.adjust_canvas_size = function(width, height) {
+    var cgm = this;
+    var params = this.params;
+
+    d3.select(params.root + " .canvas-container")
+      .style("height", height + "px")
+      .style("width", width + "px")
+    ;
+    var canvas = cgm.regl._gl.canvas;
+    canvas.style.height = height + "px";
+    canvas.style.width = width + "px";
+    cgm.resizeCanvasToDisplaySize(canvas);
+
+    const labels = params.labels;
+    params.viz_height = height;
+    params.viz_width = width;
+
+    require('../params/calc_viz_dim')(cgm.regl, params);
+    require('../params/generate_cat_args_arrs')(cgm.regl, params);
+    params.zoom_data = require('../zoom/ini_zoom_data')();
+    params.canvas_pos = require('../params/calc_row_and_col_canvas_positions')(params);
+
+    _.each(['row', 'col'], function(inst_axis){
+      require('../matrix_labels/calc_text_offsets')(params, inst_axis);
+    });
+
+    const heat = params.viz_dim.heat;
+    params.tile_pix_width = heat.width / labels.num_col;
+    params.tile_pix_height = heat.height / labels.num_row;
+
+    require('../params/gen_pix_to_webgl')(params);
+    require('../params/generate_webgl_to_pix')(params);
+    require('../matrix_labels/make_label_queue')(params);
+    require('../params/gen_text_zoom_par')(params);
+    require('../params/calc_viz_area')(params);
+    require('../params/generate_text_triangle_params')(params);
+
+    params.zoom_restrict = require('../zoom/ini_zoom_restrict')(params);
+    require('../params/calc_mat_arr')(params);
+    cgm.make_matrix_args();
+
+    require('../params/gen_dendro_par')(cgm);
+    require('../params/generate_spillover_params')(cgm.regl, params);
+    // cgm.zoom_rules_high_mat(cgm.regl, params, {});
+    require("../cameras/make_cameras")(cgm.regl, params);
+    // require("../cameras/reset_cameras")(cgm.regl, params);
+    draw_webgl_layers(cgm);
+
+    const slider_length = 130;
+    const slider_width = 25;
+    const layout = params.viz_dim.layout;
+
+    d3.select(".row_dendro_slider_svg")
+      .style("left", (params.viz_width-slider_width) + "px");
+    const pos_top = params.viz_height - (slider_length / 2) - slider_width;
+    d3.select(".col_dendro_slider_svg")
+      .style("top", pos_top + "px");
+
+    params.adjust_col_cat_titles(params);
+    params.adjust_row_cat_titles(params);
+  }
+
   canvas_plug
     .append('button')
     .html('Resize')
@@ -157,72 +219,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
       const width = d3.select(params.root + " .v1-canvas-width")
         .node().value;
 
-      params.viz_height = height;
-      params.viz_width = width;
-
-      d3.select(params.root + " .canvas-container")
-        .style("height", height + "px")
-        .style("width", width + "px")
-      ;
-      var canvas = cgm.regl._gl.canvas;
-      canvas.style.height = height + "px";
-      canvas.style.width = width + "px";
-      // cgm.resizeCanvasToDisplaySize(canvas);
-
-      console.log(width, height, canvas);
-
-      require('../params/calc_viz_dim')(cgm.regl, params);
-      require('../params/generate_cat_args_arrs')(cgm.regl, params);
-      params.canvas_pos = require('../params/calc_row_and_col_canvas_positions')(params);
-
-      _.each(['row', 'col'], function(inst_axis){
-        require('../matrix_labels/calc_text_offsets')(params, inst_axis);
-      });
-
-      const heat = params.viz_dim.heat;
-      const labels = params.labels;
-      params.tile_pix_width = heat.width / labels.num_col;
-      params.tile_pix_height = heat.height / labels.num_row;
-
-      require('../params/gen_pix_to_webgl')(params);
-      require('../params/generate_webgl_to_pix')(params);
-      require('../matrix_labels/make_label_queue')(params);
-      require('../params/gen_text_zoom_par')(params);
-      require('../params/calc_viz_area')(params);
-      require('../params/generate_text_triangle_params')(params);
-
-      params.zoom_restrict = require('../zoom/ini_zoom_restrict')(params);
-      require('../params/calc_mat_arr')(params);
-      cgm.make_matrix_args();
-
-      require('../params/gen_dendro_par')(cgm);
-      // this will leads to spillover params outofbound
-      // require('../params/generate_spillover_params')(cgm.regl, params);
-      // cgm.zoom_rules_high_mat(cgm.regl, params, external_model);
-      // require("../cameras/reset_cameras")(cgm.regl, params);
-      params.v1_control.resize = true;
-      params.zoom_data = require('../zoom/ini_zoom_data')();
-      require("../cameras/make_cameras")(cgm.regl, params);
-      draw_webgl_layers(cgm);
-
-      const slider_length = 130;
-      const slider_width = 25;
-      const layout = params.viz_dim.layout;
-
-      d3.select(".row_dendro_slider_svg")
-        .style("left", (params.viz_width-slider_width) + "px");
-      const pos_top = params.viz_height - (slider_length / 2) - slider_width;
-      d3.select(".col_dendro_slider_svg")
-        .style("top", pos_top + "px");
-
-      params.adjust_col_cat_titles(params);
-      params.adjust_row_cat_titles(params);
-
-      // d3.select(".row-cat-title-group")
-      //   .style("left", (params.viz_width-layout.right) + "px")
-      // d3.select(".col-cat-title-group")
-      //   .style("left", (params.viz_width-layout.right) + "px")
-
+      cgm.adjust_canvas_size(width, height);
     });
 
 }
