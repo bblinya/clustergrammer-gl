@@ -17,7 +17,7 @@ module.exports = function track_interaction_zoom_data(regl, params, ev){
 
     switch (ev.type) {
       case 'wheel':
-        ev.dsx = ev.dsy = Math.exp(-ev.dy / 100);
+        ev.dsx = ev.dsy = Math.exp(-ev.dy / 1000);
         ev.dx = ev.dy = 0;
         break;
     }

@@ -110,13 +110,16 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
 
   params.adjust_col_cat_titles = function (params) {
     var col_title = params.viz_dim.cat_title.col;
+    var dim_x = 55;
+    var dim_y = col_title.width;
+
     d3.select(params.root + ' .col-cat-title-group')
       .style('top', col_title.top + 'px')
       .style('left', col_title.left + 'px')
     ;
-
-    var dim_x = 55;
-    var dim_y = col_title.width;
+    d3.select(params.root + ' .col-cat-title-svg')
+      .style('width', dim_x)
+      .style('height', dim_y * params.cat_data.col.length)
     d3.selectAll(params.root + ' .col-cat-title-text')
       .style('font-size', Math.min(12, 12 * params.viz_height / 900))
       .attr('transform', function(d, i) {
@@ -192,6 +195,9 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
     d3.select(params.root + ' .row-cat-title-group')
       .style('top', (row_title.top - row_dim_x) + 'px')
       .style('left', row_title.left + 'px');
+    d3.select(params.root + ' .row-cat-title-svg')
+      .style('width', row_dim_y * params.cat_data.row.length)
+      .style('height', row_dim_x)
     d3.select(params.root + ' .row-cat-reorder-group')
       .attr('transform', function(){
           inst_rotate = -90;
