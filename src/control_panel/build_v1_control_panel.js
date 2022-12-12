@@ -300,7 +300,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
   canvas_plug
     .append('button')
-    .html('Resize')
+    .html('Fresh')
     .attr('type','button')
     .on("click", () => {
       const height = d3.select(params.root + " .v1-canvas-height")

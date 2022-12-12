@@ -9,9 +9,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
   var scale_text = num_row;
 
   var webgl_fs = (1/num_row) * params.zoom_data.y.total_zoom;
-
   var max_webgl_fs = params.text_zoom.row.max_webgl_fs;
-
   var scale_down_fs;
   if (webgl_fs > max_webgl_fs){
     scale_down_fs = webgl_fs/max_webgl_fs;
@@ -52,6 +50,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
         // total_zoom stretches out row labels horizontally
         // then text is offset to the left side of the heatmap
         //------------------------------------------------------
+        // x_position = position.x/scale_text - x_offset;
         x_position = position.x/scale_text * total_zoom - x_offset;
 
         // the y position varies for all row labels
@@ -98,7 +97,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
       x_offset: x_offset,
       heat_size: params.viz_dim.heat_size.y,
       shift_heat: params.viz_dim.mat_size.y - params.viz_dim.heat_size.y,
-      total_zoom: params.zoom_data.y.total_zoom,
+      total_zoom: params.zoom_data.y.total_zoom * params.viz_height / params.viz_width,
       mat_rotate: mat_rotate,
       // alternate way to define interpolate uni
       interp_uni: () => Math.max(0, Math.min(1, interp_fun(params))),
