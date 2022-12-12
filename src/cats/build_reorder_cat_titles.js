@@ -77,7 +77,6 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
     .text(function(d){ return d.cat_title; })
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
     .style('font-weight',  800)
-    .style('font-size', 12)
     .attr('index', (d, i) => i)
     .classed('col-cat-title-text', true)
 
@@ -119,6 +118,7 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
     var dim_x = 55;
     var dim_y = col_title.width;
     d3.selectAll(params.root + ' .col-cat-title-text')
+      .style('font-size', Math.min(12, 12 * params.viz_height / 900))
       .attr('transform', function(d, i) {
         var y_trans = dim_y * (i + 1);
         return 'translate( 0, '+ y_trans +')';
@@ -157,7 +157,6 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
     .text(function(d){ return d.cat_title; })
     .style('font-family', '"Helvetica Neue", Helvetica, Arial, sans-serif')
     .style('font-weight',  800)
-    .style('font-size', 12)
     .classed('row-cat-title-text', true)
 
   row_cat_reorder_group
@@ -199,6 +198,7 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
           return 'translate(0,' + row_dim_x + '), rotate('+ inst_rotate +')';
         });
     d3.selectAll(params.root + ' .row-cat-title-text')
+      .style('font-size', Math.min(12, 12 * params.viz_width / 900))
       .attr('transform', function(d, i) {
         var y_trans = row_title.width * (i + 1);
         return 'translate( 0, '+ y_trans +')';

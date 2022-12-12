@@ -32,8 +32,9 @@ module.exports = function make_col_text_args(regl, params, zoom_function){
   }
 
   var mat_rotate =  m3.rotation(Math.PI/4);
-  var text_y_scale = m3.scaling(1,
-    params.zoom_data.x.total_zoom * params.viz_width / params.viz_height);
+  var text_y_scale = m3.scaling(
+    params.viz_height / params.viz_width,
+    params.zoom_data.x.total_zoom);
 
   // need to shift col labels up to counteract the rotation by 45%
   var rh_tri_hyp = col_width;
