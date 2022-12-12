@@ -56,6 +56,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
       if (files.length) {
         const json_file = JSON.parse(await files[0].text());
+        // browser has 5MB size limit.
         window.sessionStorage.setItem(
           "json_file", JSON.stringify(json_file))
         window.location.reload();
@@ -193,6 +194,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
     var layout = params.layout || {};
     layout.left = parseInt(d3.select(" .v1-edge-left").node().value);
     layout.top = parseInt(d3.select(".v1-edge-top").node().value);
+    d3.select(params.root + " .v1-canvas-height")
+      .attr("value", params.viz_height);
+    d3.select(params.root + " .v1-canvas-width")
+      .attr("value", params.viz_width);
 
     require('../params/calc_viz_dim')(cgm.regl, params);
     require('../params/generate_cat_args_arrs')(cgm.regl, params);
@@ -268,7 +273,6 @@ module.exports = function build_v1_control_panel(cgm, params) {
 
   document.addEventListener("mousedown", function(e){
     var rect = canvas.getBoundingClientRect();
-    console.log(e.x, e.y, canvas_drag);
     if (in_range(e, rect.right - BORDER_SIZE, rect.top, BORDER_SIZE, rect.height)) {
       e.preventDefault(); e.stopPropagation();
       canvas_drag.enabled = true;
