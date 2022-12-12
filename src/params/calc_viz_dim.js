@@ -63,6 +63,7 @@ module.exports = function calc_vd(regl, params){
     return {
       size: mat_size, mat_scale: mat_scale,
       offset: center_offset, offset_scale: offset_scale,
+      dendro_scale: r / size,
     }
   }
 

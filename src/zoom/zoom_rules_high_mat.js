@@ -31,14 +31,10 @@ module.exports = function zoom_rules_high_mat(regl, params, external_model){
 
   })
   .on('interactionend', function(){
-
-
     if (params.ani.time - params.ani.last_click < params.ani.dblclick_duration){
-
+      console.log("double-click");
       double_clicking(regl, params);
-
     } else {
-
       console.log('single-click')
       cgm.single_clicking(params, external_model);
 

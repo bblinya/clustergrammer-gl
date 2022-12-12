@@ -81,7 +81,7 @@ module.exports = function hzome_functions(params){
     } else{
       // setTimeout(get_request, 250, gene_symbol);
       // console.log('make get request for data')
-      get_request(gene_symbol);
+      // get_request(gene_symbol);
     }
 
   }
