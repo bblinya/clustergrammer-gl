@@ -4,20 +4,18 @@ var interp_fun = require('./../draws/interp_fun');
 module.exports = function make_row_text_args(regl, params, zoom_function){
 
   var inst_axis = 'row';
-  var num_row = params.labels['num_' + inst_axis];
+  // var num_row = params.labels['num_' + inst_axis];
+  var scale_text = params.scale_text[inst_axis];
 
-  var scale_text = num_row;
-
-  var webgl_fs = (1/num_row) * params.zoom_data.y.total_zoom;
-  var max_webgl_fs = params.text_zoom.row.max_webgl_fs;
-  var scale_down_fs;
-  if (webgl_fs > max_webgl_fs){
-    scale_down_fs = webgl_fs/max_webgl_fs;
-    scale_text = scale_text * scale_down_fs;
-  }
+  // var webgl_fs = params.zoom_data.y.total_zoom / scale_text;
+  // var max_webgl_fs = params.text_zoom.row.max_webgl_fs;
+  // var scale_down_fs;
+  // if (webgl_fs > max_webgl_fs){
+  //   scale_down_fs = webgl_fs/max_webgl_fs;
+  //   scale_text = scale_text * scale_down_fs;
+  // }
 
   var mat_rotate = m3.rotation(Math.PI/2);
-
   var x_offset = params.viz_dim.mat_size.x + 0.02;
 
   var vert_arg = `

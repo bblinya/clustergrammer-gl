@@ -174,6 +174,25 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .classed("v1-edge-top", true)
   ;
 
+  canvas_plug
+    .append("label")
+    .html("ScaleR:");
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.scale_text.row)
+    .style("width", "50px")
+    .classed("v1-scale-row", true)
+  canvas_plug
+    .append("label")
+    .html("ScaleT:");
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.scale_text.col)
+    .style("width", "50px")
+    .classed("v1-scale-col", true)
+
   cgm.adjust_canvas_size = function(width, height) {
     var cgm = this;
     var params = this.params;
@@ -188,6 +207,10 @@ module.exports = function build_v1_control_panel(cgm, params) {
     cgm.resizeCanvasToDisplaySize(canvas);
 
     const labels = params.labels;
+    params.scale_text = {
+      row: parseInt(d3.select(".v1-scale-row").node().value),
+      col: parseInt(d3.select(".v1-scale-col").node().value),
+    }
     params.viz_height = height;
     params.viz_width = width;
 

@@ -44,6 +44,11 @@ module.exports = function initialize_params(external_model){
   require('./gen_label_par')(cgm);
   var labels = params.labels;
 
+  params.scale_text = {
+    row: labels.num_row,
+    col: labels.num_col,
+  };
+
   // console.log('generate_tooltip_params')
   require('./generate_tooltip_params')(regl, params);
 
