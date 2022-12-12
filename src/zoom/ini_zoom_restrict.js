@@ -10,12 +10,10 @@ module.exports = function ini_zoom_restrict(params){
   var zoom_restrict = {};
   zoom_restrict.x = {};
   zoom_restrict.x.max = max_zoom;
-  zoom_restrict.x.min = 1.0;
   zoom_restrict.x.ratio = 1.0;
 
   zoom_restrict.y = {};
   zoom_restrict.y.max = max_zoom;
-  zoom_restrict.y.min = 1.0;
   zoom_restrict.y.ratio = 1.0;
 
   var col_vs_row_space = (num_col/params.viz_dim.heat.width)/
@@ -31,6 +29,9 @@ module.exports = function ini_zoom_restrict(params){
     zoom_restrict.x.max = zoom_restrict.x.max * col_vs_row_space;
     zoom_restrict.x.ratio = col_vs_row_space;
   }
+
+  zoom_restrict.x.min = Math.min(1.0, zoom_restrict.x.max);
+  zoom_restrict.y.min = Math.min(1.0, zoom_restrict.y.max);
 
   return zoom_restrict;
 

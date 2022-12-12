@@ -6,6 +6,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
   var inst_axis = 'row';
   // var num_row = params.labels['num_' + inst_axis];
   var scale_text = params.scale_text[inst_axis];
+  scale_text = Math.max(scale_text, 20);
 
   // var webgl_fs = params.zoom_data.y.total_zoom / scale_text;
   // var max_webgl_fs = params.text_zoom.row.max_webgl_fs;
