@@ -30,8 +30,10 @@ module.exports = function ini_zoom_restrict(params){
     zoom_restrict.x.ratio = col_vs_row_space;
   }
 
-  zoom_restrict.x.min = Math.min(1.0, zoom_restrict.x.max);
-  zoom_restrict.y.min = Math.min(1.0, zoom_restrict.y.max);
+  zoom_restrict.x.min = 1.0;
+  zoom_restrict.y.min = 1.0;
+  // zoom_restrict.x.min = Math.min(1.0, zoom_restrict.x.max);
+  // zoom_restrict.y.min = Math.min(1.0, zoom_restrict.y.max);
 
   return zoom_restrict;
 

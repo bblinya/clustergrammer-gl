@@ -23,7 +23,10 @@ module.exports = function initialize_containers(){
     .style('cursor', 'default');
 
   // make canvas container
-  var inst_height = this.args.viz_height;
+  const mat_data = this.args.network.mat;
+  var num_col = mat_data[0].length;
+  var inst_height = num_col * 25 + 200;
+  inst_height = Math.min(inst_height, 900);
   const canvas_container = d3.select(base_container)
     .append('div')
     .attr('class', 'canvas-container')

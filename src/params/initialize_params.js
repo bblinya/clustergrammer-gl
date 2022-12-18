@@ -35,6 +35,10 @@ module.exports = function initialize_params(external_model){
     params.norm.zscore_status = 'non-zscored'
   }
 
+  canvas_rect = cgm.canvas_container.getBoundingClientRect();
+  params.viz_height = canvas_rect.height;
+  params.viz_width = canvas_rect.width;
+
   require('./gen_ani_par')(params);
   require('./calc_alpha_order')(params)
   require('./gen_int_par')(params);
@@ -44,20 +48,16 @@ module.exports = function initialize_params(external_model){
   require('./gen_label_par')(cgm);
   var labels = params.labels;
 
-  params.scale_text = {
-    row: 1, col: 1,
-    // row: labels.num_row,
-    // col: labels.num_col,
-  };
+  params.scale_text = { row: 1, col: 1, };
 
   // console.log('generate_tooltip_params')
   require('./generate_tooltip_params')(regl, params);
 
   // params.viz_height = args.viz_height; //inst_height;
   // params.viz_width = args.viz_width; // inst_width;
-  canvas_rect = cgm.canvas_container.getBoundingClientRect();
-  params.viz_height = canvas_rect.height;
-  params.viz_width = canvas_rect.width;
+  // canvas_rect = cgm.canvas_container.getBoundingClientRect();
+  // params.viz_height = canvas_rect.height;
+  // params.viz_width = canvas_rect.width;
 
   require('./calc_viz_dim')(regl, params);
   require('./generate_cat_args_arrs')(regl, params);
@@ -93,14 +93,8 @@ module.exports = function initialize_params(external_model){
   params.matrix.potential_recluster.distance_metric = params.matrix.distance_metric
   params.matrix.potential_recluster.linkage_type = params.matrix.linkage_type
 
-  var min_dim;
-  if (labels.num_col < labels.num_row){
-    min_dim = labels.num_col;
-  } else {
-    min_dim = labels.num_row;
-  }
-
-  params.max_zoom = Math.max(min_dim/4.0, 1.0);
+  var min_dim = Math.min(labels.num_col, labels.num_row);
+  params.max_zoom = min_dim / 4.0;
   params.zoom_restrict = require('./../zoom/ini_zoom_restrict')(params);
 
   cgm.zoom_rules_high_mat(regl, params, external_model);

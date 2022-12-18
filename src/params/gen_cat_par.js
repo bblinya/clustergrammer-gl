@@ -12,9 +12,11 @@ module.exports = function gen_cat_par(params){
   cat_data.cat_num.col = cat_data.col.length;
 
   var cat_room = {};
-  cat_room.webgl = 0.0135;
-  cat_room.x = cat_room.webgl;
-  cat_room.y = cat_room.webgl;
+  // cat_room.webgl = 0.0135;
+  cat_room.x = 13.5 / params.viz_width;
+  cat_room.y = 13.5 / params.viz_height;
+  // cat_room.x = cat_room.webgl;
+  // cat_room.y = cat_room.webgl;
   cat_data.cat_room = cat_room;
 
   cat_data.showing_color_picker = false

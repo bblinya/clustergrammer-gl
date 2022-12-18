@@ -98,18 +98,18 @@ function clustergrammer_gl(args, external_model=null){
 
     }
 
-    function adjust_opacity(opacity_scale){
-      console.log('adjust_opacity!!!!!!!!!!!!!!')
+    // function adjust_opacity(opacity_scale){
+    //   console.log('adjust_opacity!!!!!!!!!!!!!!')
 
-      let cgm = this
-      let params = cgm.params
+    //   let cgm = this
+    //   let params = cgm.params
 
-      params.matrix.opacity_scale = opacity_scale
-      cgm.make_matrix_args()
-      draw_webgl_layers(cgm)
-    }
+    //   params.matrix.opacity_scale = opacity_scale
+    //   cgm.make_matrix_args()
+    //   draw_webgl_layers(cgm)
+    // }
 
-    cgm.adjust_opacity = adjust_opacity
+    // cgm.adjust_opacity = adjust_opacity
 
 
 

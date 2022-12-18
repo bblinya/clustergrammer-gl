@@ -6,10 +6,7 @@ module.exports = function make_col_text_args(regl, params, zoom_function){
 
   var inst_axis = 'col';
   var num_col = params.labels['num_' + inst_axis];
-
-  var scale_text = params.scale_text[inst_axis];
-  scale_text = num_col / scale_text;
-  // scale_text = Math.max(scale_text, 20);
+  var scale_text = num_col;
 
   var col_width = params.viz_dim.heat_size.x/num_col;
 
@@ -30,6 +27,7 @@ module.exports = function make_col_text_args(regl, params, zoom_function){
     scale_down_fs = webgl_fs/max_webgl_fs;
     scale_text = scale_text * scale_down_fs;
   }
+  scale_text = scale_text / params.scale_text[inst_axis];
 
   var mat_rotate =  m3.rotation(Math.PI/4);
   var text_y_scale = m3.scaling(

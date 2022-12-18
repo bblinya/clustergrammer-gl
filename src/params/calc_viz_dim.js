@@ -44,10 +44,19 @@ module.exports = function calc_vd(regl, params){
   var inst_dim;
   var offset_heat = {};
 
+  function view_char_width(size, num_label) {
+    return 7.8125;
+  }
+  var row_space = (params.labels.row_length + 1) * 
+    view_char_width(params.viz_width, params.labels.num_row);
+  var col_space = (params.labels.col_length + 1) * 
+    view_char_width(params.viz_height, params.labels.num_col) /
+    Math.sqrt(2);
+
   var layout = params.layout || {};
   layout = {
-    left: layout.left || 125,
-    top: layout.top || 125,
+    left: layout.left || row_space,
+    top: layout.top || col_space,
     right: layout.right || 55,
     bottom: layout.bottom || 55,
   }

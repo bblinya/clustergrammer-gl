@@ -5,9 +5,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
 
   var inst_axis = 'row';
   var num_row = params.labels['num_' + inst_axis];
-  var scale_text = params.scale_text[inst_axis];
-  scale_text = num_row / scale_text;
-  // scale_text = Math.max(scale_text, 20);
+  var scale_text = num_row;
 
   var webgl_fs = params.zoom_data.y.total_zoom / scale_text;
   var max_webgl_fs = params.text_zoom.row.max_webgl_fs;
@@ -16,6 +14,7 @@ module.exports = function make_row_text_args(regl, params, zoom_function){
     scale_down_fs = webgl_fs/max_webgl_fs;
     scale_text = scale_text * scale_down_fs;
   }
+  scale_text = scale_text / params.scale_text[inst_axis];
 
   var mat_rotate = m3.rotation(Math.PI/2);
   var x_offset = params.viz_dim.mat_size.x + 0.02;

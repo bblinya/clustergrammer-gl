@@ -121,7 +121,7 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
       .style('width', dim_x)
       .style('height', dim_y * params.cat_data.col.length)
     d3.selectAll(params.root + ' .col-cat-title-text')
-      .style('font-size', Math.min(12, 12 * params.viz_height / 900))
+      .style('font-size', 12)
       .attr('transform', function(d, i) {
         var y_trans = dim_y * (i + 1);
         return 'translate( 0, '+ y_trans +')';
@@ -204,7 +204,7 @@ module.exports = function build_reorder_cat_titles(regl, cgm){
           return 'translate(0,' + row_dim_x + '), rotate('+ inst_rotate +')';
         });
     d3.selectAll(params.root + ' .row-cat-title-text')
-      .style('font-size', Math.min(12, 12 * params.viz_width / 900))
+      .style('font-size', 12)
       .attr('transform', function(d, i) {
         var y_trans = row_title.width * (i + 1);
         return 'translate( 0, '+ y_trans +')';

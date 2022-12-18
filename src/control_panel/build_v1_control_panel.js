@@ -80,11 +80,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .html("Color Scheme: ")
   ;
 
-  const color_schemes = [
-    { pos: "red", neg: "blue", name: "R/B" },
-    { pos: "red", neg: "green", name: "R/G" },
-    { pos: "red", neg: "yellow", name: "R/Y" },
-  ];
+  cgm.color_schemes = [ ];
   const selector = color_scheme_container
     .append("select")
     .attr("name", "color-scheme-selector")
@@ -95,8 +91,23 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .on("change", () => { 
       const t = d3.event.target;
       const idx = t.options[t.selectedIndex].value;
-      const d = color_schemes[idx];
+      cgm.set_color_scheme(idx);
+    })
+  ;
 
+  cgm.set_color_scheme_option = function(scheme) {
+    cgm.color_schemes = scheme;
+    selector.selectAll("*").remove();
+    for (var i = 0; i < scheme.length; i++) {
+      selector
+        .append("option")
+        .attr("value", i)
+        .html(scheme[i].name)
+      ;
+    }
+  }
+  cgm.set_color_scheme = function(idx) {
+      const d = cgm.color_schemes[idx];
       params.network.matrix_colors.pos = d.pos;
       params.network.matrix_colors.neg = d.neg;
 
@@ -108,16 +119,14 @@ module.exports = function build_v1_control_panel(cgm, params) {
       // update webgl matrix props
       cgm.make_matrix_args();
       draw_webgl_layers(cgm);
-    })
-  ;
 
-  for (var i = 0; i < color_schemes.length; i++) {
-    selector
-      .append("option")
-      .attr("value", i)
-      .html(color_schemes[i].name)
-    ;
   }
+  cgm.set_color_scheme_option([
+    { pos: "red", neg: "blue", name: "R/B" },
+    { pos: "red", neg: "green", name: "R/G" },
+    { pos: "red", neg: "yellow", name: "R/Y" },
+  ]);
+
 
   // =========== Canvas Size ==========
   const canvas_plug = container.append("div");
@@ -174,7 +183,15 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .classed("v1-edge-top", true)
   ;
 
-  cgm.adjust_canvas_size = function(width, height) {
+  cgm.get_canvas_attr = function() {
+    return {
+      width: cgm.canvas_container.style.width,
+      height: cgm.canvas_container.style.height,
+      left: params.layout.left,
+      top: params.layout.top,
+    }
+  }
+  cgm.set_canvas_attr = function(width, height, left, top) {
     var cgm = this;
     var params = this.params;
 
@@ -193,14 +210,17 @@ module.exports = function build_v1_control_panel(cgm, params) {
     params.viz_width = rect.width;
     console.log("adjust canvas size: ", params.viz_width);
 
-    var layout = params.layout || {};
-    layout.left = parseInt(d3.select(" .v1-edge-left").node().value);
-    layout.top = parseInt(d3.select(".v1-edge-top").node().value);
+    var layout = params.layout;
+    layout.left = left;
+    layout.top = top;
     d3.select(params.root + " .v1-canvas-height")
       .attr("value", params.viz_height);
     d3.select(params.root + " .v1-canvas-width")
       .attr("value", params.viz_width);
 
+    var cat_room = params.cat_data.cat_room;
+    cat_room.x = 12.0 / params.viz_width;
+    cat_room.y = 12.0 / params.viz_height;
     require('../params/calc_viz_dim')(cgm.regl, params);
     require('../params/generate_cat_args_arrs')(cgm.regl, params);
     params.zoom_data = require('../zoom/ini_zoom_data')();
@@ -248,9 +268,9 @@ module.exports = function build_v1_control_panel(cgm, params) {
   window.addEventListener("resize", (e) => {
     const height = cgm.canvas_container.style.height;
     const width = cgm.canvas_container.style.width;
-    const row_scale = parseFloat(d3.select(".v1-scale-row").node().value);
-    const col_scale = parseFloat(d3.select(".v1-scale-col").node().value);
-    cgm.adjust_canvas_size(width, height, row_scale, col_scale);
+    const left = parseFloat(d3.select(" .v1-edge-left").node().value);
+    const top = parseFloat(d3.select(".v1-edge-top").node().value);
+    cgm.set_canvas_attr(width, height, left, top);
   })
 
   // const BORDER_SIZE = 4;
@@ -303,7 +323,7 @@ module.exports = function build_v1_control_panel(cgm, params) {
   //     document.removeEventListener("mousemove", resize_x, false);
   //     document.removeEventListener("mousemove", resize_y, false);
   //     var canvas_size = getComputedStyle(canvas, '');
-  //     cgm.adjust_canvas_size(parseInt(canvas_size.width), parseInt(canvas_size.height));
+  //     cgm.set_canvas_attr(parseInt(canvas_size.width), parseInt(canvas_size.height));
   //   }
   // }, false);
 
@@ -317,7 +337,9 @@ module.exports = function build_v1_control_panel(cgm, params) {
         .node().value;
       const width = d3.select(params.root + " .v1-canvas-width")
         .node().value;
-      cgm.adjust_canvas_size(width + "px", height + "px",);
+      const left = parseFloat(d3.select(" .v1-edge-left").node().value);
+      const top = parseFloat(d3.select(".v1-edge-top").node().value);
+      cgm.set_canvas_attr(width + "px", height + "px", left, top);
     });
 
   canvas_plug
@@ -339,10 +361,11 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .style("width", "20px")
     .classed("v1-scale-col", true)
 
-  cgm.adjust_scale_text = function() {
-    const row_scale = parseFloat(d3.select(".v1-scale-row").node().value);
-    const col_scale = parseFloat(d3.select(".v1-scale-col").node().value);
-    params.scale_text = { row: row_scale, col: col_scale };
+  cgm.get_scale_text = function() {
+    return params.scale_text;
+  }
+  cgm.set_scale_text = function(row_scale, col_scale) {
+    params.scale_text = { row: row_scale, col: col_scale, };
     draw_webgl_layers(cgm);
   }
 
@@ -350,5 +373,9 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .append('button')
     .html('Scale')
     .attr('type','button')
-    .on("click", () => { cgm.adjust_scale_text(); });
+    .on("click", () => {
+      const row_scale = parseFloat(d3.select(".v1-scale-row").node().value);
+      const col_scale = parseFloat(d3.select(".v1-scale-col").node().value);
+      cgm.set_scale_text(row_scale, col_scale);
+    });
 }

@@ -14,7 +14,6 @@ module.exports = function track_interaction_zoom_data(regl, params, ev){
   var interaction_types = ['wheel', 'touch', 'pinch'];
 
   if (ev.buttons || interaction_types.indexOf(ev.type) !== -1)  {
-
     switch (ev.type) {
       case 'wheel':
         ev.dsx = ev.dsy = Math.exp(-ev.dy / 1000);
@@ -74,6 +73,19 @@ module.exports = function track_interaction_zoom_data(regl, params, ev){
 
     zoom_data.x = zoom_rules_low_mat(params, zoom_restrict.x, zoom_data.x, viz_dim.heat.x, viz_dim.mat.x, 'x');
     zoom_data.y = zoom_rules_low_mat(params, zoom_restrict.y, zoom_data.y, viz_dim.heat.y, viz_dim.mat.y, 'y');
+
+    if (zoom_restrict.y.min >= zoom_restrict.y.max) {
+      zoom_data.y.inst_zoom = 1;
+      zoom_data.y.total_zoom = 1;
+      zoom_data.y.pan_by_drag = 0;
+      zoom_data.y.pan_by_zoom = 0;
+    }
+    if (zoom_restrict.x.min >= zoom_restrict.x.max) {
+      zoom_data.x.inst_zoom = 1;
+      zoom_data.x.total_zoom = 1;
+      zoom_data.x.pan_by_drag = 0;
+      zoom_data.x.pan_by_zoom = 0;
+    }
 
     keep_track_of_interactions(params);
 

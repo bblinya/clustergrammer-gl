@@ -39,4 +39,8 @@ module.exports = function gen_label_par(cgm){
   params.labels = labels;
   require('./../matrix_labels/gen_ordered_labels')(cgm);
 
+  var row_lengths = labels.ordered_labels.rows.map(x => x.length);
+  labels.row_length = _.max(row_lengths);
+  var col_lengths = labels.ordered_labels.cols.map(x => x.length);
+  labels.col_length = _.max(col_lengths);
 };
