@@ -98,12 +98,6 @@ module.exports = function makeCamera2D (regl, params, opts, zoom_data, viz_compo
   }).on('interactionend', function (ev) {
     ev.preventDefault();
   }).on('interaction', function (ev) {
-    // if (params.v1_control.resize) {
-    //   init_my_view();
-    //   computeViewport();
-    //   params.v1_control.resize = false;
-    // }
-
     if (params.int.enable_viz_interact){
       // console.log(zoom_data.x.cursor_position, zoom_data.y.cursor_position)
       camera_interaction(zoom_data, ev, viz_component, mInvViewport, mat4, mView,

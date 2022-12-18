@@ -45,7 +45,7 @@ module.exports = function make_opacity_arr(params){
   var opacity_arr = [].concat.apply([], viz_mat_data);
 
   var abs_max_val = Math.abs(_.max(opacity_arr, function(d){
-    return isNaN(d) ? 0: Math.abs(d);
+    return params.is_nan_value(d) ? 0 : Math.abs(d);
   }));
 
   var opacity_scale = d3.scaleLinear();
@@ -59,7 +59,7 @@ module.exports = function make_opacity_arr(params){
     .clamp(true);
 
   opacity_arr = opacity_arr.map(function(x) {
-    return isNaN(x) ? 1.5 : opacity_scale(x);
+    return params.is_nan_value(x) ? 1.5 : opacity_scale(x);
   });
 
   return opacity_arr;

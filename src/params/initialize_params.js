@@ -35,6 +35,15 @@ module.exports = function initialize_params(external_model){
     params.norm.zscore_status = 'non-zscored'
   }
 
+  cgm.nan_value = null;
+  cgm.set_nan_value = function(val) {
+    cgm.nan_value = val;
+    cgm.make_matrix_args();
+    require('../draws/draw_webgl_layers')(cgm);
+  }
+  cgm.is_nan_value = function(val) { return isNaN(val) || (val == cgm.nan_value); }
+  params.is_nan_value = cgm.is_nan_value;
+
   canvas_rect = cgm.canvas_container.getBoundingClientRect();
   params.viz_height = canvas_rect.height;
   params.viz_width = canvas_rect.width;

@@ -20,7 +20,7 @@ module.exports = function make_tooltip_text(cgm, external_model){
     // col name
     tooltip_text = tooltip_text + mouseover.col.name;
     tooltip_text = tooltip_text + ' <br>Value: ';
-    tooltip_text += isNaN(mouseover.value) ? "NaN" : mouseover.value.toFixed(3);
+    tooltip_text += cgm.is_nan_value(mouseover.value) ? "NaN" : mouseover.value.toFixed(3);
 
     if ('value_iz' in params.int.mouseover){
       tooltip_text = tooltip_text + ' <br>Original value: ' + mouseover.value_iz.toFixed(3);

@@ -4,9 +4,7 @@ const color_to_rgba = require('./../colors/color_to_rgba');
 module.exports = function build_v1_control_panel(cgm, params) {
   // const control_container = params.root + " .control-container"
   // const container = d3.select(control_container);
-  params.v1_control = {
-    resize: false,
-  }
+
 
   const v1_height = 50;
   const v1_width = params.viz_width;

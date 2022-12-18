@@ -17,13 +17,6 @@ module.exports = function make_matrix_args(){
   params.arrs = {};
   params.arrs.opacity_arr = make_opacity_arr(params);
 
-  // var is_nan_arr = [].concat.apply([], params.mat_data);
-  // params.arrs.is_nan_arr = is_nan_arr.map(x => isNaN(x))
-
-  // var is_nan_buffer = regl.buffer({
-  //   type: 'bool', usage: 'dynamic',
-  // })(params.arrs.is_nan_arr);
-
   params.arrs.position_arr = {};
 
   params.arrs.position_arr.ini = make_position_arr(params,
