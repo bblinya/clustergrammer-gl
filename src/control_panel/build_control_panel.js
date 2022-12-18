@@ -28,23 +28,18 @@ module.exports = function build_control_panel(){
 
   const container = d3.select(control_container)
     .attr("height", i_height + "px")
-    .attr("width", i_width + "px");
-  
-
-  // .attr("height", i_height + "px")
-  // .attr("width", i_width + "px");
+    .attr("width", "100%");
 
   const control_panel_color = 'white';
   var text_color = '#47515b';
   var button_color = '#eee';
 
   var i_height = 135;
-  var i_width = params.viz_width;
   var control_svg = container
     .append('svg')
     .classed('control_svg', true)
     .attr('height',i_height + 'px')
-    .attr('width',i_width+'px')
+    .attr('width',"100%")
     .on('mouseover', function(){
       params.tooltip.in_bounds_tooltip = false;
     })
@@ -52,7 +47,7 @@ module.exports = function build_control_panel(){
   control_svg
     .append('rect')
     .attr('height',i_height + 'px')
-    .attr('width',i_width+'px')
+    .attr('width',"100%")
     .attr('position', 'absolute')
     .attr('fill', control_panel_color)
     .attr('class', 'control-panel-background')
@@ -82,7 +77,7 @@ module.exports = function build_control_panel(){
     .append('rect')
     .classed('north_border', true)
     .attr('height', '1px')
-    .attr('width',i_width+'px')
+    .attr('width',"100%")
     .attr('position', 'absolute')
     .attr('stroke', '#eee')
     .attr('stroke-width', 3)

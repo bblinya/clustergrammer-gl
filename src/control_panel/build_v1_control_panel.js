@@ -174,45 +174,24 @@ module.exports = function build_v1_control_panel(cgm, params) {
     .classed("v1-edge-top", true)
   ;
 
-  canvas_plug
-    .append("label")
-    .html("ScaleR:");
-  canvas_plug
-    .append("input")
-    .attr("type", "text")
-    .attr("value", params.scale_text.row)
-    .style("width", "50px")
-    .classed("v1-scale-row", true)
-  canvas_plug
-    .append("label")
-    .html("ScaleT:");
-  canvas_plug
-    .append("input")
-    .attr("type", "text")
-    .attr("value", params.scale_text.col)
-    .style("width", "50px")
-    .classed("v1-scale-col", true)
-
   cgm.adjust_canvas_size = function(width, height) {
     var cgm = this;
     var params = this.params;
 
     d3.select(params.root + " .canvas-container")
-      .style("height", height + "px")
-      .style("width", width + "px")
+      .style("height", height)
+      .style("width", width)
     ;
     var canvas = cgm.regl._gl.canvas;
-    canvas.style.height = height + "px";
-    canvas.style.width = width + "px";
+    canvas.style.width = width;
+    canvas.style.height = height;
     cgm.resizeCanvasToDisplaySize(canvas);
 
     const labels = params.labels;
-    params.scale_text = {
-      row: parseInt(d3.select(".v1-scale-row").node().value),
-      col: parseInt(d3.select(".v1-scale-col").node().value),
-    }
-    params.viz_height = height;
-    params.viz_width = width;
+    rect = canvas.getBoundingClientRect();
+    params.viz_height = rect.height;
+    params.viz_width = rect.width;
+    console.log("adjust canvas size: ", params.viz_width);
 
     var layout = params.layout || {};
     layout.left = parseInt(d3.select(" .v1-edge-left").node().value);
@@ -266,59 +245,67 @@ module.exports = function build_v1_control_panel(cgm, params) {
     params.adjust_row_cat_titles(params);
   }
 
-  const BORDER_SIZE = 4;
-  var canvas = d3.select(params.root + " .canvas-container")
-    .style("margin-top", "10px")
-    .style("border", BORDER_SIZE + "px solid")
-    .node();
+  window.addEventListener("resize", (e) => {
+    const height = cgm.canvas_container.style.height;
+    const width = cgm.canvas_container.style.width;
+    const row_scale = parseFloat(d3.select(".v1-scale-row").node().value);
+    const col_scale = parseFloat(d3.select(".v1-scale-col").node().value);
+    cgm.adjust_canvas_size(width, height, row_scale, col_scale);
+  })
 
-  var canvas_drag = {
-    drag: false,
-    x: false, x_pos: 0,
-    y: false, y_pos: 0,
-  }
-  function resize_x(e){
-    e.preventDefault(); e.stopPropagation();
-    const dx = e.x - canvas_drag.x_pos;
-    canvas_drag.x_pos = e.x;
-    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + dx + "px";
-  }
-  function resize_y(e) {
-    e.preventDefault(); e.stopPropagation();
-    const dy = e.y - canvas_drag.y_pos;
-    canvas_drag.y_pos = e.y;
-    canvas.style.height = parseInt(getComputedStyle(canvas, '').height) + dy + "px";
-  }
+  // const BORDER_SIZE = 4;
+  // var canvas = d3.select(params.root + " .canvas-container")
+  //   .style("margin-top", "10px")
+  //   .style("border", BORDER_SIZE + "px solid")
+  //   .node();
 
-  function in_range(e, x, y, width, height) {
-    return (e.x >= x && e.x <= (x + width)) && (e.y >= y && e.y <= (y + height));
-  }
+  // var canvas_drag = {
+  //   drag: false,
+  //   x: false, x_pos: 0,
+  //   y: false, y_pos: 0,
+  // }
+  // function resize_x(e){
+  //   e.preventDefault(); e.stopPropagation();
+  //   const dx = e.x - canvas_drag.x_pos;
+  //   canvas_drag.x_pos = e.x;
+  //   canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + dx + "px";
+  // }
+  // function resize_y(e) {
+  //   e.preventDefault(); e.stopPropagation();
+  //   const dy = e.y - canvas_drag.y_pos;
+  //   canvas_drag.y_pos = e.y;
+  //   canvas.style.height = parseInt(getComputedStyle(canvas, '').height) + dy + "px";
+  // }
 
-  document.addEventListener("mousedown", function(e){
-    var rect = canvas.getBoundingClientRect();
-    if (in_range(e, rect.right - BORDER_SIZE, rect.top, BORDER_SIZE, rect.height)) {
-      e.preventDefault(); e.stopPropagation();
-      canvas_drag.enabled = true;
-      canvas_drag.x_pos = e.x;
-      document.addEventListener("mousemove", resize_x, false);
-    }
-    if (in_range(e, rect.left, rect.bottom - BORDER_SIZE, rect.width, BORDER_SIZE)) {
-      e.preventDefault(); e.stopPropagation();
-      canvas_drag.enabled = true;
-      canvas_drag.y_pos = e.y;
-      document.addEventListener("mousemove", resize_y, false);
-    }
-  }, false);
+  // function in_range(e, x, y, width, height) {
+  //   return (e.x >= x && e.x <= (x + width)) && (e.y >= y && e.y <= (y + height));
+  // }
 
-  document.addEventListener("mouseup", function(){
-    if (canvas_drag.enabled) {
-      canvas_drag.enabled = false;
-      document.removeEventListener("mousemove", resize_x, false);
-      document.removeEventListener("mousemove", resize_y, false);
-      var canvas_size = getComputedStyle(canvas, '');
-      cgm.adjust_canvas_size(parseInt(canvas_size.width), parseInt(canvas_size.height));
-    }
-  }, false);
+  // document.addEventListener("mousedown", function(e){
+  //   var rect = canvas.getBoundingClientRect();
+  //   if (in_range(e, rect.right - BORDER_SIZE, rect.top, BORDER_SIZE, rect.height)) {
+  //     e.preventDefault(); e.stopPropagation();
+  //     canvas_drag.enabled = true;
+  //     canvas_drag.x_pos = e.x;
+  //     document.addEventListener("mousemove", resize_x, false);
+  //   }
+  //   if (in_range(e, rect.left, rect.bottom - BORDER_SIZE, rect.width, BORDER_SIZE)) {
+  //     e.preventDefault(); e.stopPropagation();
+  //     canvas_drag.enabled = true;
+  //     canvas_drag.y_pos = e.y;
+  //     document.addEventListener("mousemove", resize_y, false);
+  //   }
+  // }, false);
+
+  // document.addEventListener("mouseup", function(){
+  //   if (canvas_drag.enabled) {
+  //     canvas_drag.enabled = false;
+  //     document.removeEventListener("mousemove", resize_x, false);
+  //     document.removeEventListener("mousemove", resize_y, false);
+  //     var canvas_size = getComputedStyle(canvas, '');
+  //     cgm.adjust_canvas_size(parseInt(canvas_size.width), parseInt(canvas_size.height));
+  //   }
+  // }, false);
 
 
   canvas_plug
@@ -330,8 +317,38 @@ module.exports = function build_v1_control_panel(cgm, params) {
         .node().value;
       const width = d3.select(params.root + " .v1-canvas-width")
         .node().value;
-
-      cgm.adjust_canvas_size(parseInt(width), parseInt(height));
+      cgm.adjust_canvas_size(width + "px", height + "px",);
     });
 
+  canvas_plug
+    .append("label")
+    .html("ScaleR:");
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.scale_text.row)
+    .style("width", "20px")
+    .classed("v1-scale-row", true)
+  canvas_plug
+    .append("label")
+    .html("ScaleT:");
+  canvas_plug
+    .append("input")
+    .attr("type", "text")
+    .attr("value", params.scale_text.col)
+    .style("width", "20px")
+    .classed("v1-scale-col", true)
+
+  cgm.adjust_scale_text = function() {
+    const row_scale = parseFloat(d3.select(".v1-scale-row").node().value);
+    const col_scale = parseFloat(d3.select(".v1-scale-col").node().value);
+    params.scale_text = { row: row_scale, col: col_scale };
+    draw_webgl_layers(cgm);
+  }
+
+  canvas_plug
+    .append('button')
+    .html('Scale')
+    .attr('type','button')
+    .on("click", () => { cgm.adjust_scale_text(); });
 }

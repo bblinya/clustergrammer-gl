@@ -3,6 +3,14 @@ module.exports = function initialize_containers(){
 
   var base_container = this.args.container;
 
+  d3.select(base_container)
+    // .style("padding-left", "10px")
+    // .style("padding-top", "10px")
+    // .style("width", "100%")
+    // .style("height", "100%")
+  ;
+    
+
   // make control panel (needs to appear above canvas)
   d3.select(base_container)
     .append('div')
@@ -15,35 +23,25 @@ module.exports = function initialize_containers(){
     .style('cursor', 'default');
 
   // make canvas container
-  d3.select(base_container)
+  var inst_height = this.args.viz_height;
+  const canvas_container = d3.select(base_container)
     .append('div')
     .attr('class', 'canvas-container')
-    .style('position', 'absolute')
-    .style('cursor', 'default');
+    .style('position', 'relative')
+    .style('cursor', 'default')
+    .style('width', '100%')
+    .style('height', inst_height + "px")
+  ;
 
-  // console.log('base_container')
-  // debugger
-  // console.log(base_container)
+  // var inst_width  = this.params.viz_width;
 
-  // var canvas_container = d3.select(base_container)
-  //                          .select('.canvas-container')[0][0];
-
-  // var canvas_container = d3.select('#' + base_container.id + ' .canvas_container');
-
-  var canvas_container = d3.select(base_container)
-                           .select('.canvas-container')._groups[0][0];
-
-
-
-
-  var inst_height = this.args.viz_height;
-  var inst_width  = this.args.viz_width;
-
-  d3.select(canvas_container)
-    .style('height',inst_height + 'px')
-    .style('width',inst_width+'px');
+  // d3.select(canvas_container)
+  //   .style('height',inst_height + 'px')
+  //   .style("width", "100%");
+    // .style('height',inst_height + 'px')
+    // .style('width',inst_width+'px');
 
   // console.log(canvas_container)
-  this.canvas_container = canvas_container;
+  this.canvas_container = canvas_container.node();
   // return canvas_container;
 };

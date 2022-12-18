@@ -17,12 +17,11 @@ function clustergrammer_gl(args, external_model=null){
 
     cgm.args = args;
 
-
     cgm.resizeCanvasToDisplaySize = function(canvas) {
       const gl = canvas.getContext("webgl");
       // Lookup the size the browser is displaying the canvas in CSS pixels.
-      const dpr = window.devicePixelRatio;
       const {width, height} = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio;
       const displayWidth  = Math.round(width * dpr);
       const displayHeight = Math.round(height * dpr);
 

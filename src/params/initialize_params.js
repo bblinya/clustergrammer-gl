@@ -45,15 +45,19 @@ module.exports = function initialize_params(external_model){
   var labels = params.labels;
 
   params.scale_text = {
-    row: labels.num_row,
-    col: labels.num_col,
+    row: 1, col: 1,
+    // row: labels.num_row,
+    // col: labels.num_col,
   };
 
   // console.log('generate_tooltip_params')
   require('./generate_tooltip_params')(regl, params);
 
-  params.viz_height = args.viz_height; //inst_height;
-  params.viz_width = args.viz_width; // inst_width;
+  // params.viz_height = args.viz_height; //inst_height;
+  // params.viz_width = args.viz_width; // inst_width;
+  canvas_rect = cgm.canvas_container.getBoundingClientRect();
+  params.viz_height = canvas_rect.height;
+  params.viz_width = canvas_rect.width;
 
   require('./calc_viz_dim')(regl, params);
   require('./generate_cat_args_arrs')(regl, params);

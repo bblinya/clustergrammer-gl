@@ -155,7 +155,7 @@ module.exports = function calc_spillover_triangles(params){
     // top-right spillover rect (right angle triangle for slanted text only)
     {'pos': [
              // [1, scaled_mat.y + 1 - ini_mat.x - ofc.y],
-             [1, scaled_mat.y + 1 - ini_mat.y - 2.0 * ofc.x],
+             [1, scaled_mat.y + 1 - ini_mat.y - 2.0 * ofc.y],
              [ini_mat.x + ofc.x, scaled_mat.y - ofc.y],
              [1.0, scaled_mat.y - ofc.y]
              ]},
