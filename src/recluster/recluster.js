@@ -3,6 +3,7 @@ var clusterfck = require('../clusterfck_local/clusterfck');
 var core = require('mathjs/core');
 var math = core.create();
 var dist_fun = require('./distance_functions');
+// var dist_fun = require('./distance_functions_modified-2');
 var get_order_and_groups_clusterfck_tree = require('./get_order_and_groups_clusterfck_tree');
 // var update_view = require('../update/update_view');
 // var underscore = require('underscore');
@@ -39,6 +40,13 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
   // new_view.nodes.col_nodes = _.clone(cgm.params.network.col_nodes);
 
   let mat = _.map(cgm.params.network.mat, _.clone);
+  // set NaN as default value when recluster.
+  const def_value = -10; // 0, Infinity
+  for (var i = 0; i < mat.length; i++) {
+    for (var j = 0; j < mat[i].length; j++) {
+      if (cgm.is_nan_value(mat[i][j])) mat[i][j] = def_value;
+    }
+  }
 
   cgm.params.tree = {}
   // col must be after row.
@@ -52,31 +60,6 @@ module.exports = function recluster(distance_metric='cosine', linkage_type='aver
     var names = rc_nodes.map(x => x.name.split(': ')[1]);
 
     if (axis == 'col') { mat = transpose(mat); }
-
-    // if (axis === 'row'){
-    //   mat = _.map(cgm.params.network.mat, _.clone);
-    //   // mat = _.clone(cgm.params.network.mat);
-
-    //   names = cgm.params.network.row_nodes.map(x => x.name.split(': ')[1]);
-    //   name_nodes = 'row_nodes';
-
-    // } else if (axis === 'col'){
-    //   mat = _.map(cgm.params.network.mat, _.clone);
-    //   // mat = _.clone(cgm.params.network.mat);
-    //   mat = transpose(mat);
-
-    //   names = cgm.params.network.col_nodes.map(x => x.name.split(': ')[1])
-    //   name_nodes = 'col_nodes';
-    // }
-
-    // set NaN as default value when recluster.
-    const def_value = -10; // 0, Infinity
-    for (var i = 0; i < mat.length; i++) {
-      for (var j = 0; j < mat[i].length; j++) {
-        if (cgm.is_nan_value(mat[i][j])) mat[i][j] = def_value;
-      }
-    }
-
 
     // average, single, complete
     var clusters = clusterfck.hcluster(mat, dist_fun[distance_metric], linkage_type);
